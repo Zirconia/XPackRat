@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Belonging image size -->
+    <dimen name="list_belonging_image">40dp</dimen>
+
+    <!-- Margins for name of belonging -->
+    <dimen name="list_belonging_name_left_margin">16dp</dimen>
+    <dimen name="list_belonging_name_start_margin">@dimen/list_belonging_name_left_margin</dimen>
+
+    <!-- Margins for text view that indicates last time a belonging was used -->
+    <dimen name="list_belonging_last_used_left_margin">16dp</dimen>
+    <dimen name="list_belonging_last_used_start_margin">
+        @dimen/list_belonging_name_left_margin
+    </dimen>
+
+    <!-- Padding for each list item's constraint layout-->
+    <dimen name="list_belogning_padding_vertical">12dp</dimen>
+    <dimen name="list_belogning_padding_horizontal">16dp</dimen>
+</resources>

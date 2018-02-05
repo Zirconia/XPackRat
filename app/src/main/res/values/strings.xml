@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">X-PackRat</string>
+
+    <!-- Generic content description for any list view item's image. Each list view item will
+         have its own image taken from the user's photos so we leave it up to the screen reader
+         to read the name the user supplies for each list item since we cannot provide descriptions
+         for the user's own images.-->
+    <string name="belonging_image_content_description">The image for this belonging</string>
+
+    <!-- Text that appears on list item button used for logging usage -->
+    <string name="log_usage_button_text">log usage</string>
+
+    <!-- The content authority -->
+    <string name="content_authority">com.example.android.x_packrat</string>
 </resources>

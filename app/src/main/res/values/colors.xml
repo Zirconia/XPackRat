@@ -3,4 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!--  Color for the text that indicates when a belonging has last been used-->
+    <color name="last_used_text_color">#727272</color>
 </resources>

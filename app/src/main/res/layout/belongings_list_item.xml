@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:paddingBottom="@dimen/list_belogning_padding_vertical"
+    android:paddingLeft="@dimen/list_belogning_padding_horizontal"
+    android:paddingRight="@dimen/list_belogning_padding_horizontal"
+    android:paddingTop="@dimen/list_belogning_padding_vertical">
+
+    <ImageView
+        android:id="@+id/belonging_image"
+        android:layout_width="@dimen/list_belonging_image"
+        android:layout_height="@dimen/list_belonging_image"
+        android:contentDescription="@string/belonging_image_content_description"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        tools:src="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/belonging_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/list_belonging_name_left_margin"
+        android:layout_marginStart="@dimen/list_belonging_name_start_margin"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintLeft_toRightOf="@+id/belonging_image"
+        tools:text="Portable Heater"/>
+
+    <TextView
+        android:id="@+id/last_used_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/last_used_text_color"
+        app:layout_constraintLeft_toLeftOf="@+id/belonging_name"
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        tools:text="Feb 4 2018"/>
+
+    <TextView
+        android:id="@+id/last_used_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/last_used_text_color"
+        android:layout_marginLeft="@dimen/list_belonging_last_used_left_margin"
+        android:layout_marginStart="@dimen/list_belonging_last_used_start_margin"
+        app:layout_constraintLeft_toRightOf="@+id/last_used_date"
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        tools:text="3:19PM"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/log_usage_button_text"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>
