@@ -61,7 +61,7 @@
         app:layout_constraintGuide_percent="0.5"/>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/main_log_usage_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/log_usage_button_text"

@@ -12,4 +12,59 @@
 
     <!-- The content authority -->
     <string name="content_authority">com.example.android.x_packrat</string>
+
+    <!-- Used to open Settings Menu from MainActivity -->
+    <string name="action_settings">Settings</string>
+
+    <!-- Title for add icon in MainActivity menu-->
+    <string name="action_add_belonging">Add belonging</string>
+
+    <!-- Title for delete icon in EditorActivity menu -->
+    <string name="action_delete_belonging">Delete belonging</string>
+
+    <!-- EditorActivity labels -->
+    <!-- Label for the option to add an image in the EditorActivity-->
+    <string name="add_image_label">Image</string>
+    <!-- Label for the option to edit the name of a belonging in EditorActivity-->
+    <string name="belonging_name_label">Name</string>
+    <!-- Hint text for the field to enter a belonging name -->
+    <string name="hint_belonging_name">Name</string>
+
+    <!-- Generic content description for a belongings image in the EditorActivity-->
+    <string name="editor_image_content_description">This is the image for this belonging.</string>
+
+    <!-- Text for button to change a belonging's image in the EditorActivity-->
+    <string name="change_image_button">set image</string>
+
+    <!-- Action bar title for adding a belonging -->
+    <string name="editor_activity_title_update_belonging">Update Belonging</string>
+
+    <!-- Action bar title for updating an existing belonging-->
+    <string name="editor_activity_title_add_belonging">Add Belonging</string>
+
+    <!-- Message for indicating when a delete operation has failed in the EditorActivity-->
+    <string name="editor_delete_belonging_failed">Failed to delete belonging</string>
+
+    <!-- Message for indicating when a delete operation has succeeded in the EditorActivity-->
+    <string name="editor_delete_belonging_succeeded">Belonging deleted successfully</string>
+
+    <!-- Dialog message to ask the user to confirm deleting the current belonging -->
+    <string name="delete_dialog_msg">Delete this belonging?</string>
+
+    <!-- Dialog button text for the option to confirm deleting the current belonging -->
+    <string name="delete">Delete</string>
+
+    <!-- Dialog button text for the option to cancel deletion of the current belonging -->
+    <string name="cancel">Cancel</string>
+
+    <!-- Text for unsaved changes dialog message -->
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
+
+    <!-- Text for discard option on unsaved changes dialog -->
+    <string name="discard">DISCARD</string>
+
+    <!-- Text for keep editing option on unsaved changes dialog -->
+    <string name="keep_editing">KEEP EDITING</string>
+
+
 </resources>
