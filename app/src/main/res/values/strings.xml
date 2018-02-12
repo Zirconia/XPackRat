@@ -27,6 +27,10 @@
     <string name="add_image_label">Image</string>
     <!-- Label for the option to edit the name of a belonging in EditorActivity-->
     <string name="belonging_name_label">Name</string>
+    <!-- Label for the option to change most recent use date in the EditorActivity-->
+    <string name="change_date_label">Date</string>
+    <!-- Label for the option to change most recent use time in the EditorActivity-->
+    <string name="change_time_label">Time</string>
     <!-- Hint text for the field to enter a belonging name -->
     <string name="hint_belonging_name">Name</string>
 
@@ -65,6 +69,46 @@
 
     <!-- Text for keep editing option on unsaved changes dialog -->
     <string name="keep_editing">KEEP EDITING</string>
+
+    <!-- Text for Toast telling the user that they must not leave the name field blank in
+         EditorActivity -->
+    <string name="please_enter_name">Please enter a name</string>
+
+    <!-- Text for Toast telling the user that they must select a date in
+         EditorActivity -->
+    <string name="please_enter_date">Please enter a date</string>
+
+    <!-- Text for Toast telling the user that they must select a time in
+         EditorActivity -->
+    <string name="please_enter_time">Please enter a time</string>
+
+    <!-- Text for Toast telling the user that their belonging was added successfully in
+         EditorActivity -->
+    <string name="belonging_add_succ">Belonging added successfully</string>
+
+    <!-- Text for Toast telling the user that their belonging was NOT added successfully in
+         EditorActivity -->
+    <string name="belonging_add_fail">Failed to add belonging</string>
+
+    <!-- Text for Toast telling the user that their belonging was NOT updated successfully in
+         EditorActivity -->
+    <string name="belonging_update_fail">Failed to update belonging</string>
+
+    <!-- Text for Toast telling the user that their belonging was updated successfully in
+         EditorActivity -->
+    <string name="belonging_update_succ">Belonging updated successfully</string>
+
+    <!-- Content description for edit icon on a MainActivity recycler view item -->
+    <string name="content_descrip_edit_ic">Edit belonging</string>
+
+    <!-- Text for button to change most recent use date in EditorActivity -->
+    <string name="change_date_button">Change Date</string>
+
+    <!-- Text for button to change most recent use time in EditorActivity -->
+    <string name="change_time_button">change time</string>
+
+    <!-- Text for button to change most recent use time in EditorActivity -->
+    <string name="no_data_available">Add a belonging using the + to get started</string>
 
 
 </resources>

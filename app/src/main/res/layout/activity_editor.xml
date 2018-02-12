@@ -29,7 +29,7 @@
             android:orientation="vertical">
 
             <!-- Name field -->
-            <EditText
+            <com.example.android.x_packrat.TouchableEditText
                 android:id="@+id/edit_belonging_name"
                 android:hint="@string/hint_belonging_name"
                 android:inputType="textCapWords"
@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/editor_image_content_description"
-            android:src="@drawable/ic_launcher_background"
+            android:src="@drawable/ic_image_black_36dp"
             app:layout_constraintLeft_toLeftOf="@+id/edit_belonging_name" />
 
         <Button
@@ -64,5 +64,78 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/change_image_button" />
+
+    </LinearLayout>
+
+    <!-- Most Recent use date for belonging -->
+    <LinearLayout
+        android:id="@+id/container_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/container_image">
+
+        <!-- Label -->
+        <TextView
+            android:text="@string/change_date_label"
+            style="@style/CategoryStyle"/>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:paddingLeft="4dp"
+            android:paddingStart="4dp"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/editor_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/change_date_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/change_date_button" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Most Recent use time for belonging -->
+    <LinearLayout
+        android:id="@+id/container_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/container_date">
+
+        <!-- Label -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="@string/change_time_label" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:paddingLeft="4dp"
+            android:paddingStart="4dp"
+            android:layout_gravity="center_vertical|left">
+
+            <TextView
+                android:id="@+id/editor_time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/change_time_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/change_time_button" />
+        </LinearLayout>
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

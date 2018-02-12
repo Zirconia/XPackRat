@@ -5,10 +5,6 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
- * Created by BlackMagicianDTT on 2/4/2018.
- */
-
-/**
  * Defines table and column names for the possessions database
  */
 public class BelongingsContract {
@@ -27,7 +23,7 @@ public class BelongingsContract {
      */
     public static final class BelongingEntry implements BaseColumns {
 
-        /* The base CONTENT_URI used to query the Belongings table from the content provider */
+        // The base CONTENT_URI used to query the Belongings table from the content provider
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_BELONGINGS)
                 .build();
@@ -55,6 +51,25 @@ public class BelongingsContract {
         public static final String COLUMN_BELONGING_NAME = "belonging_name";
         public static final String COLUMN_LAST_USED_DATE = "last_used_date";
         /*Note: their is no time column because both the date and time are stored
-        * under the date column as one integer representing UTC date and GMT time*/
+        * under the date column as one integer representing date and time*/
+    }
+
+    /*
+     * Inner class that defines the contents of a Usage Log table
+     */
+    public static final class UsageLogEntry implements BaseColumns {
+
+        public static final String TABLE_NAME = "usage_log";
+
+        public static String UNIQUE_TABLE_URI = "usage_log";
+
+        public static String UNIQUE_TABLE_NAME = "";
+
+        /*
+         *Names of all of the columns in a Usage Log table
+         */
+        public static final String COLUMN_USAGE_DATE = "usage_date";
+        /*Note: their is no time column because both the date and time are stored
+        * under the date column as one integer representing date and time*/
     }
 }

@@ -26,8 +26,9 @@
         <activity android:name=".EditorActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".MainActivity" />
         </activity>
+        <activity android:name=".UsageLogsActivity"></activity>
     </application>
 
 </manifest>

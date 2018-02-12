@@ -1,10 +1,9 @@
 package com.example.android.x_packrat;
 
-import android.content.ContentUris;
-import android.support.v4.app.LoaderManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -20,29 +19,27 @@ import android.widget.TextView;
 
 import com.example.android.x_packrat.data.BelongingsContract;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>
-        , BelongingsAdapter.BelongingsAdapterOnClickHandler {
+public class UsageLogsActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<Cursor>, UsageLogAdapter.UsageLogAdapterOnClickHandler {
 
-    private final String TAG = MainActivity.class.getSimpleName();
+    private final String TAG = UsageLogsActivity.class.getSimpleName();
 
     /*
-     * The columns of data that we are interested in displaying within our MainActivity's list of
-     * belongings.
+     * The columns of data that we are interested in displaying within our UsageLogActivity's list
+     * of usage logs
      */
-    public static final String[] MAIN_BELONGINGS_PROJECTION = {
+    public static final String[] USAGE_LOG_PROJECTION = {
             BelongingsContract.BelongingEntry._ID,
-            BelongingsContract.BelongingEntry.COLUMN_BELONGING_IMAGE,
-            BelongingsContract.BelongingEntry.COLUMN_BELONGING_NAME,
-            BelongingsContract.BelongingEntry.COLUMN_LAST_USED_DATE,
+            BelongingsContract.UsageLogEntry.COLUMN_USAGE_DATE
     };
 
-    // Used to identify the loader responsible for loading our list of belongings from the database
-    private static final int ID_BELONGINGS_LOADER = 77;
+    // Used to identify the loader responsible for loading our list of usage logs from the database
+    private static final int ID_USAGE_LOGS_LOADER = 80;
 
     // Stores a reference to the adapter that is attached to the recycler view
-    private BelongingsAdapter mBelongingsAdapter;
+    private UsageLogAdapter mUsageLogAdapter;
 
-    // Holds reference to recycler view that displays the list of belongings
+    // Holds reference to recycler view that displays the list of usage logs
     private RecyclerView mRecyclerView;
 
     // Stores the recycler views current scroll position
@@ -53,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     // Stores reference to message to display when the recycler view is empty
     private TextView mEmptyView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,16 +73,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mRecyclerView.setHasFixedSize(true);
 
         // Links our belongings data with our views that will display it
-        mBelongingsAdapter = new BelongingsAdapter(this, this);
+        mUsageLogAdapter = new UsageLogAdapter(this, this);
 
         // Attaches our adapter(link to our data source) to our recycler view to allow for items to
         // be displayed
-        mRecyclerView.setAdapter(mBelongingsAdapter);
+        mRecyclerView.setAdapter(mUsageLogAdapter);
 
         showLoading();
 
         // Initializes and starts a new loader if a loader with the given ID does not exist
-        getSupportLoaderManager().initLoader(ID_BELONGINGS_LOADER, null, this);
+        getSupportLoaderManager().initLoader(ID_USAGE_LOGS_LOADER, null, this);
     }
 
     /**
@@ -101,17 +97,28 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         switch (loaderId) {
 
-            case ID_BELONGINGS_LOADER:
-                // URI for all rows in "belongings" table
-                Uri belongingsQueryUri = BelongingsContract.BelongingEntry.CONTENT_URI;
+            case ID_USAGE_LOGS_LOADER:
+                Intent intent = getIntent();
+                String belongingName = intent.getStringExtra("belonging_name");
+                String belongingId = String.valueOf(intent.
+                        getLongExtra("belonging_id", 0));
+                String tablePath = belongingName + BelongingsContract.UsageLogEntry.TABLE_NAME +
+                        belongingId;
+
+                // URI for all rows of usage dates for this belonging
+                Uri belongingsQueryUri = BelongingsContract.BASE_CONTENT_URI.buildUpon().
+                        appendPath(BelongingsContract.UsageLogEntry.TABLE_NAME).
+                        appendPath(tablePath).build();
+                BelongingsContract.UsageLogEntry.UNIQUE_TABLE_URI = belongingsQueryUri.toString();
+                BelongingsContract.UsageLogEntry.UNIQUE_TABLE_NAME = tablePath;
 
                 // Sort belongings in descending order by last used date
-                String sortOrder = BelongingsContract.BelongingEntry.
-                        COLUMN_LAST_USED_DATE + " DESC";
+                String sortOrder = BelongingsContract.UsageLogEntry.
+                        COLUMN_USAGE_DATE + " DESC";
 
                 return new CursorLoader(this,
                         belongingsQueryUri,
-                        MAIN_BELONGINGS_PROJECTION,
+                        USAGE_LOG_PROJECTION,
                         null,
                         null,
                         sortOrder);
@@ -128,16 +135,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mBelongingsAdapter.swapCursor(data);
 
-        // Scrolls recycler view to position of the first item in the list
-        // if there is no position set
+        mUsageLogAdapter.swapCursor(data);
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
         mRecyclerView.smoothScrollToPosition(mPosition);
-
-        // Checks if there is data to show. If not, displays message, else displays the data
         if (data.getCount() != 0) {
-            showBelongingsDataView();
+            showUsageLogDataView();
         } else {
             showEmptyView();
         }
@@ -152,64 +155,30 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
-        // Clears the adapter displaying the belongings data since the loader's data is now invalid
-        mBelongingsAdapter.swapCursor(null);
+        // Clears the adapter displaying the usage log data since the loader's data is now invalid
+        mUsageLogAdapter.swapCursor(null);
     }
 
     /**
      * Used for responding to clicks from our list
      *
-     * @param v             The clicked item
      * @param clickedItemId The database id for the clicked item
-     * @param belongingName The name of the clicked item
      */
     @Override
-    public void onClick(View v, long clickedItemId, String belongingName) {
-        // Appends the clicked item's id to the content Uri
-        Uri clickedBelongingUri;
+    public void onClick(View v, long clickedItemId) {
 
-        // Checks if the user is attempting to check the usage logs for the clicked belonging
-        // or if they are trying to edit the belonging. Launches the appropriate activity
-        // for the belonging
-        if (v.getId() == R.id.main_log_usage_button) {
-            String tablePath = belongingName + BelongingsContract.UsageLogEntry.TABLE_NAME +
-                    clickedItemId;
-            clickedBelongingUri = BelongingsContract.BASE_CONTENT_URI.buildUpon().
-                    appendPath(BelongingsContract.UsageLogEntry.TABLE_NAME).
-                    appendPath(tablePath).build();
-
-            Intent usageLogActivityIntent = new Intent(MainActivity.this,
-                    UsageLogsActivity.class);
-            usageLogActivityIntent.putExtra("belonging_name", belongingName);
-            usageLogActivityIntent.putExtra("belonging_id", clickedItemId);
-            usageLogActivityIntent.setData(clickedBelongingUri);
-
-            startActivity(usageLogActivityIntent);
-        } else {
-            clickedBelongingUri = ContentUris.withAppendedId(BelongingsContract.BelongingEntry.
-                    CONTENT_URI, clickedItemId);
-
-            Intent editBelongingIntent = new Intent(
-                    MainActivity.this, EditorActivity.class);
-            editBelongingIntent.setData(clickedBelongingUri);
-            editBelongingIntent.putExtra("belonging_name", belongingName);
-            editBelongingIntent.putExtra("belonging_id", clickedItemId);
-
-            startActivity(editBelongingIntent);
-        }
     }
 
     /**
-     * Makes the view for the belongings data visible and hides the
-     * loading indicator.
+     * Makes the view for the usage log data visible and hides the loading indicator.
      */
-    private void showBelongingsDataView() {
+    private void showUsageLogDataView() {
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     /**
-     * Makes the loading indicator visible and hides the belongings View
+     * Makes the loading indicator visible and hides the usage log View
      */
     private void showLoading() {
         mRecyclerView.setVisibility(View.INVISIBLE);
@@ -217,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     /**
-     * Hides the loading indicator and hides the belongings recycler view. Makes
+     * Hides the loading indicator and hides the usage log recycler view. Makes
      * the view for the empty recycler view state visible.
      */
     private void showEmptyView() {
@@ -258,4 +227,5 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         return super.onOptionsItemSelected(item);
     }
+
 }

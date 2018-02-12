@@ -60,13 +60,22 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.5"/>
 
+    <ImageView
+        android:id="@+id/content_descrip_edit_ic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/content_descrip_edit_ic"
+        android:src="@drawable/ic_edit_white_36dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:layout_constraintLeft_toRightOf="@id/belonging_name"/>
+
     <Button
         android:id="@+id/main_log_usage_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/log_usage_button_text"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
+        android:text="Button"
+        app:layout_constraintLeft_toRightOf="@id/content_descrip_edit_ic"
         app:layout_constraintRight_toRightOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -10,7 +10,7 @@ import android.util.Log;
  */
 public class BelongingsDbHelper extends SQLiteOpenHelper{
 
-    public static  final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 1;
 
     public static final String DATABASE_NAME = "possessions.db";
 
@@ -20,7 +20,7 @@ public class BelongingsDbHelper extends SQLiteOpenHelper{
             + BelongingsContract.BelongingEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + BelongingsContract.BelongingEntry.COLUMN_BELONGING_IMAGE + " BLOB NOT NULL, "
             + BelongingsContract.BelongingEntry.COLUMN_BELONGING_NAME + " TEXT NOT NULL, "
-            + BelongingsContract.BelongingEntry.COLUMN_LAST_USED_DATE + " INTEGER NOT NULL);";
+            + BelongingsContract.BelongingEntry.COLUMN_LAST_USED_DATE + " INTEGER );";
 
     // SQL "belongings" table deletion constant
     public static final String SQL_DELETE_BELONGINGS_TABLE =
