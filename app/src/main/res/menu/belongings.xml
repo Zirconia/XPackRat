@@ -8,4 +8,10 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_add_white_36dp"
         android:title="@string/action_add_belonging"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:title="@string/action_settings"/>
 </menu>

@@ -20,14 +20,12 @@ public class TouchableEditText extends AppCompatEditText {
         return super.performClick();
     }
 
-    public TouchableEditText(Context context, AttributeSet attrs)
-    {
+    public TouchableEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
     }
 
-    public TouchableEditText(Context context, AttributeSet attrs, int defStyle)
-    {
+    public TouchableEditText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.context = context;
     }

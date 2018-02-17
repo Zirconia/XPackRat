@@ -16,6 +16,19 @@
     <!-- Used to open Settings Menu from MainActivity -->
     <string name="action_settings">Settings</string>
 
+    <!-- Settings preference strings -->
+    <string name="pref_reminder_frequency_label">Reminder Frequency</string>
+    <string name="pref_reminder_frequency_label_weekly">Weekly</string>
+    <string name="pref_reminder_frequency_label_biweekly">Once every two weeks</string>
+    <string name="pref_reminder_frequency_label_monthly">Monthly</string>
+    <string name="pref_reminder_frequency_label_bimonthly">Once every two months</string>
+    <string name="pref_reminder_frequency_key" translatable="false">frequency</string>
+    <string name="pref_reminder_frequency_value_weekly" translatable="false">weekly</string>
+    <string name="pref_reminder_frequency_value_biweekly" translatable="false">biweekly</string>
+    <string name="pref_reminder_frequency_value_monthly" translatable="false">monthly</string>
+    <string name="pref_reminder_frequency_value_bimonthly" translatable="false">bimonthly</string>
+
+
     <!-- Title for add icon in MainActivity menu-->
     <string name="action_add_belonging">Add belonging</string>
 
@@ -45,6 +58,9 @@
 
     <!-- Action bar title for updating an existing belonging-->
     <string name="editor_activity_title_add_belonging">Add Belonging</string>
+
+    <!-- Action bar title for viewing usage logs -->
+    <string name="usage_log_activity_title_text">Usage Logs</string>
 
     <!-- Message for indicating when a delete operation has failed in the EditorActivity-->
     <string name="editor_delete_belonging_failed">Failed to delete belonging</string>
@@ -107,8 +123,20 @@
     <!-- Text for button to change most recent use time in EditorActivity -->
     <string name="change_time_button">change time</string>
 
-    <!-- Text for button to change most recent use time in EditorActivity -->
+    <!-- Text to display when the recycler view has nothing to display in MainActivity-->
     <string name="no_data_available">Add a belonging using the + to get started</string>
 
+    <!-- Text to display when the recycler view has nothing to display in UsageLogActivity-->
+    <string name="no_logs_available">Usage dates that you have logged for this belonging,
+        appear here.</string>
 
+    <!-- Text for main notification channel name-->
+    <string name="main_notification_channel_name">Primary</string>
+
+    <!-- Text for the notification title-->
+    <string name="usage_reminder_notification_title">You haven\'t used a belonging(s) lately.</string>
+
+    <!-- Text for the notification body-->
+    <string name="usage_reminder_notification_body">Maybe you should consider selling, discarding,
+        or giving away that item(s).</string>
 </resources>

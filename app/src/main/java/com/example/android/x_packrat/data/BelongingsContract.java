@@ -17,6 +17,7 @@ public class BelongingsContract {
      * Possible paths that can be appended to BASE_CONTENT_URI to form valid URI's
      */
     public static final String PATH_BELONGINGS = "belongings";
+    public static final String PATH_USAGE_LOG = "usage_log";
 
     /*
      * Inner class that defines the table contents of the Belongings table
@@ -59,16 +60,25 @@ public class BelongingsContract {
      */
     public static final class UsageLogEntry implements BaseColumns {
 
+        // The base CONTENT_URI used to query the usage log table from the content provider
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_USAGE_LOG)
+                .build();
+
+        /**
+         * The MIME type of the content URI for a list of usage logs
+         */
+        public static final String CONTENT_LIST_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" +
+                        PATH_USAGE_LOG;
+
         public static final String TABLE_NAME = "usage_log";
-
-        public static String UNIQUE_TABLE_URI = "usage_log";
-
-        public static String UNIQUE_TABLE_NAME = "";
 
         /*
          *Names of all of the columns in a Usage Log table
          */
         public static final String COLUMN_USAGE_DATE = "usage_date";
+        public static final String COLUMN_BELONGING_ID = "belonging_id";
         /*Note: their is no time column because both the date and time are stored
         * under the date column as one integer representing date and time*/
     }

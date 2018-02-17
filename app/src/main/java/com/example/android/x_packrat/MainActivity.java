@@ -1,6 +1,8 @@
 package com.example.android.x_packrat;
 
 import android.content.ContentUris;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,6 +21,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.x_packrat.data.BelongingsContract;
+import com.example.android.x_packrat.sync.ReminderUtilities;
+import com.example.android.x_packrat.utilities.NotificationUtils;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>
         , BelongingsAdapter.BelongingsAdapterOnClickHandler {
@@ -26,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private final String TAG = MainActivity.class.getSimpleName();
 
     /*
-     * The columns of data that we are interested in displaying within our MainActivity's list of
+     * The columns of data that we are interested in within our MainActivity's list of
      * belongings.
      */
     public static final String[] MAIN_BELONGINGS_PROJECTION = {
@@ -53,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     // Stores reference to message to display when the recycler view is empty
     private TextView mEmptyView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mRecyclerView.setAdapter(mBelongingsAdapter);
 
         showLoading();
+
+        // Fetch value from shared prefs to check if this is user's first time running the app
+        // and schedule belonging usage reminders if so.
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (!sharedPreferences.getBoolean("job_initialized", false)) {
+            ReminderUtilities.scheduleUsageReminder(this);
+        }
 
         // Initializes and starts a new loader if a loader with the given ID does not exist
         getSupportLoaderManager().initLoader(ID_BELONGINGS_LOADER, null, this);
@@ -164,25 +176,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * @param belongingName The name of the clicked item
      */
     @Override
-    public void onClick(View v, long clickedItemId, String belongingName) {
-        // Appends the clicked item's id to the content Uri
+    public void onClick(View v, long clickedItemId, String belongingName, byte[] belongingImage) {
         Uri clickedBelongingUri;
 
         // Checks if the user is attempting to check the usage logs for the clicked belonging
         // or if they are trying to edit the belonging. Launches the appropriate activity
         // for the belonging
         if (v.getId() == R.id.main_log_usage_button) {
-            String tablePath = belongingName + BelongingsContract.UsageLogEntry.TABLE_NAME +
-                    clickedItemId;
-            clickedBelongingUri = BelongingsContract.BASE_CONTENT_URI.buildUpon().
-                    appendPath(BelongingsContract.UsageLogEntry.TABLE_NAME).
-                    appendPath(tablePath).build();
+
+            clickedBelongingUri = BelongingsContract.UsageLogEntry.CONTENT_URI;
 
             Intent usageLogActivityIntent = new Intent(MainActivity.this,
                     UsageLogsActivity.class);
             usageLogActivityIntent.putExtra("belonging_name", belongingName);
+            usageLogActivityIntent.putExtra("belonging_image", belongingImage);
             usageLogActivityIntent.putExtra("belonging_id", clickedItemId);
-            usageLogActivityIntent.setData(clickedBelongingUri);
 
             startActivity(usageLogActivityIntent);
         } else {
@@ -192,8 +200,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             Intent editBelongingIntent = new Intent(
                     MainActivity.this, EditorActivity.class);
             editBelongingIntent.setData(clickedBelongingUri);
-            editBelongingIntent.putExtra("belonging_name", belongingName);
-            editBelongingIntent.putExtra("belonging_id", clickedItemId);
 
             startActivity(editBelongingIntent);
         }
@@ -206,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private void showBelongingsDataView() {
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
+        mEmptyView.setVisibility(View.GONE);
     }
 
     /**
@@ -254,8 +261,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.action_add_belonging:
                 startActivity(new Intent(this, EditorActivity.class));
                 return true;
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // temp method used to test notification and check appearance
+    public void testNotification(View v) {
+        NotificationUtils.remindOfLongUnusedBelonging(this);
+        //ReminderUtilities.getDispatcher().cancel("hydration_reminder_tag");
     }
 }

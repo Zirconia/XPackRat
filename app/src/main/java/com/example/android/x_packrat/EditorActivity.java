@@ -14,7 +14,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -24,7 +23,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,7 +36,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.android.x_packrat.data.BelongingsContract;
-import com.example.android.x_packrat.data.BelongingsProvider;
 import com.example.android.x_packrat.utilities.XPackRatDateUtils;
 import com.example.android.x_packrat.utilities.XPackRatImageUtils;
 
@@ -368,11 +365,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.
                 Toast.makeText(this, getString(R.string.belonging_add_succ),
                         Toast.LENGTH_SHORT).show();
 
-                // Creates a usage log table in the database for this belonging and inserts an entry
-                // in the newly created table for the current set last used date and time.
+                // Inserts an entry into the usage log table for the current set last used date and
+                // time.
                 List<String> uriSegments = newUri.getPathSegments();
                 String newUriId = uriSegments.get(1);
-                createUsageLogTable(nameString, newUriId);
                 if (mBelongingDatetimeHasChanged) {
                     mBelongingDatetimeHasChanged = false;
                     insertUsageDate(newUriId, nameString, dateTime);
@@ -432,14 +428,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.
             // Successful
             Toast.makeText(this, getString(R.string.editor_delete_belonging_succeeded),
                     Toast.LENGTH_SHORT).show();
-
-            // Stores the name entered into the name input field
-            String nameString = mNameEditText.getText().toString().trim();
-
-            // Deletes this belonging's usage log table as it no longer exists now
-            List<String> uriSegments = mBelongingEditUri.getPathSegments();
-            String uriId = uriSegments.get(1);
-            deleteUsageLogTable(nameString, uriId);
         }
 
         finish();
@@ -751,56 +739,18 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.
     }
 
     /**
-     * Creates a usage log table for the current belonging
-     *
-     * @param belongingName The name of the current belonging
-     * @param belongingId   The database value for the belonging's id
-     */
-    public void createUsageLogTable(String belongingName, String belongingId) {
-        final SQLiteDatabase db = BelongingsProvider.mDbHelper.getWritableDatabase();
-        String CREATE_USAGE_LOG_TABLE = "CREATE TABLE " + belongingName
-                + BelongingsContract.UsageLogEntry.TABLE_NAME + belongingId + " ("
-                + BelongingsContract.UsageLogEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + BelongingsContract.UsageLogEntry.COLUMN_USAGE_DATE + " INTEGER );";
-        Log.v("SQL_CHECK", CREATE_USAGE_LOG_TABLE);
-        db.execSQL(CREATE_USAGE_LOG_TABLE);
-        db.close();
-    }
-
-    /**
-     * Deletes the usage log table for the current belonging
-     *
-     * @param belongingName The name of the current belonging
-     * @param belongingId   The database value for the belonging's id
-     */
-    public void deleteUsageLogTable(String belongingName, String belongingId) {
-        final SQLiteDatabase db = BelongingsProvider.mDbHelper.getWritableDatabase();
-        String tableName = belongingName + BelongingsContract.UsageLogEntry.TABLE_NAME + belongingId;
-        String DELETE_USAGE_LOG_TABLE = "DROP TABLE " + tableName;
-        Log.v("SQL_CHECK", DELETE_USAGE_LOG_TABLE);
-        db.execSQL(DELETE_USAGE_LOG_TABLE);
-        db.close();
-    }
-
-    /**
      * Inserts an entry into the usage log table for the current belonging
      *
-     * @param uriId      The database value for the belonging's id
-     * @param nameString The name of the current belonging
-     * @param dateTime   The datetime to insert into the table
+     * @param belongingId The database value for the belonging's id
+     * @param nameString  The name of the current belonging
+     * @param dateTime    The datetime to insert into the table
      */
-    public void insertUsageDate(String uriId, String nameString, long dateTime) {
-        ContentValues dateVals = new ContentValues();
-        dateVals.put(BelongingsContract.UsageLogEntry.COLUMN_USAGE_DATE, dateTime);
+    public void insertUsageDate(String belongingId, String nameString, long dateTime) {
+        ContentValues dateVal = new ContentValues();
+        dateVal.put(BelongingsContract.UsageLogEntry.COLUMN_USAGE_DATE, dateTime);
+        dateVal.put(BelongingsContract.UsageLogEntry.COLUMN_BELONGING_ID, belongingId);
 
-        String tablePath = nameString + BelongingsContract.UsageLogEntry.TABLE_NAME +
-                uriId;
-        BelongingsContract.UsageLogEntry.UNIQUE_TABLE_NAME = tablePath;
-
-        Uri baseDateUri = BelongingsContract.BASE_CONTENT_URI.buildUpon().
-                appendPath(BelongingsContract.UsageLogEntry.TABLE_NAME).
-                appendPath(tablePath).build();
-
-        Uri newUsageDateUri = getContentResolver().insert(baseDateUri, dateVals);
+        Uri newUsageDateUri = getContentResolver().insert(
+                BelongingsContract.UsageLogEntry.CONTENT_URI, dateVal);
     }
 }

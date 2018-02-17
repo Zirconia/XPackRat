@@ -25,7 +25,7 @@ import java.util.Locale;
  * database.
  */
 public class BelongingsAdapter extends RecyclerView.Adapter<BelongingsAdapter.
-        BelongingsAdapterViewHolder>{
+        BelongingsAdapterViewHolder> {
 
     // Indicates that we want to use the layout "R.layout.belongings_list_item" to display each
     // item in the recycler view
@@ -41,7 +41,7 @@ public class BelongingsAdapter extends RecyclerView.Adapter<BelongingsAdapter.
      * The interface that receives onClick messages.
      */
     public interface BelongingsAdapterOnClickHandler {
-        void onClick(View v, long clickedItemId, String clickedItemName);
+        void onClick(View v, long clickedItemId, String clickedItemName, byte[] belongingImage);
     }
 
     // Holds the data that is fetched from the database
@@ -54,8 +54,7 @@ public class BelongingsAdapter extends RecyclerView.Adapter<BelongingsAdapter.
      * @param clickHandler The on-click handler for this adapter. This single handler is called
      *                     when an item is clicked.
      */
-    public BelongingsAdapter(@NonNull Context context, BelongingsAdapterOnClickHandler clickHandler)
-    {
+    public BelongingsAdapter(@NonNull Context context, BelongingsAdapterOnClickHandler clickHandler) {
         mContext = context;
         mClickHandler = clickHandler;
     }
@@ -66,7 +65,6 @@ public class BelongingsAdapter extends RecyclerView.Adapter<BelongingsAdapter.
      *
      * @param viewGroup The ViewGroup that these ViewHolders are contained within
      * @param viewType  Used to determine what layout to use for displaying recycler view items
-     *
      * @return A new BelongingsAdapterViewHolder that holds a View for a list item
      */
     @Override
@@ -137,14 +135,13 @@ public class BelongingsAdapter extends RecyclerView.Adapter<BelongingsAdapter.
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-        int hour = hourOfDay % 12;
         int minute = calendar.get(Calendar.MINUTE);
 
         Locale locale = XPackRatDateUtils.getUserLocale(mContext);
 
         // Sets the date that the belonging was last used to be displayed in a text view
         BelongingsAdapterViewHolder.lastUsedDateView.setText(
-                XPackRatDateUtils.formatDate(locale,year,month,day));
+                XPackRatDateUtils.formatDate(locale, year, month, day));
 
         // Sets the time that the belonging was last used to be displayed in a text view
         BelongingsAdapterViewHolder.lastUsedTimeView.setText(XPackRatDateUtils.formatTime(
@@ -167,7 +164,7 @@ public class BelongingsAdapter extends RecyclerView.Adapter<BelongingsAdapter.
      * position.
      *
      * @param position index within our RecyclerView and Cursor
-     * @return         the view type (determines what layout to use when displaying an item)
+     * @return the view type (determines what layout to use when displaying an item)
      */
     @Override
     public int getItemViewType(int position) {
@@ -210,16 +207,16 @@ public class BelongingsAdapter extends RecyclerView.Adapter<BelongingsAdapter.
             nameView = (TextView) view.findViewById(R.id.belonging_name);
             lastUsedDateView = (TextView) view.findViewById(R.id.last_used_date);
             lastUsedTimeView = (TextView) view.findViewById(R.id.last_used_time);
-            logUsageButton = (Button)view.findViewById(R.id.main_log_usage_button);
+            logUsageButton = (Button) view.findViewById(R.id.main_log_usage_button);
             logUsageButton.setOnClickListener(this);
 
             view.setOnClickListener(this);
         }
 
         /**
-         * This gets called by the child views during a click. We fetch the id of the item that has
-         * been selected, and then call the onClick handler registered with this adapter,
-         * passing that id and the clicked view.
+         * This gets called by the child views during a click. We fetch the database id of the item
+         * that has been selected, and then call the onClick handler registered with this adapter,
+         * passing that id, the clicked view, the clicked item name and the clicked item image.
          *
          * @param v The View that was clicked
          */
@@ -227,12 +224,18 @@ public class BelongingsAdapter extends RecyclerView.Adapter<BelongingsAdapter.
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
+
             long clickedItemId = mCursor.getLong(mCursor.getColumnIndexOrThrow(
                     BelongingsContract.BelongingEntry._ID));
+
             String clickedItemName = mCursor.getString(mCursor.getColumnIndexOrThrow(
                     BelongingsContract.BelongingEntry.COLUMN_BELONGING_NAME
             ));
-            mClickHandler.onClick(v, clickedItemId, clickedItemName);
+
+            byte[] belongingImage = mCursor.getBlob(mCursor.getColumnIndexOrThrow(
+                    BelongingsContract.BelongingEntry.COLUMN_BELONGING_IMAGE));
+
+            mClickHandler.onClick(v, clickedItemId, clickedItemName, belongingImage);
         }
     }
 }

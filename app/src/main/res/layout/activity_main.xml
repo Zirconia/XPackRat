@@ -19,6 +19,7 @@
         android:layout_gravity="center"
         android:visibility="invisible" />
 
+    <!-- Displays a message for when the recycler view is empty -->
     <TextView
         android:id="@+id/empty_view"
         android:layout_width="match_parent"
@@ -27,5 +28,12 @@
         android:visibility="gone"
         android:text="@string/no_data_available"
         android:textSize="36sp"/>
+
+    <Button
+        android:id="@+id/dummyButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="testNotification"
+        android:onClick="testNotification"/>
 
 </FrameLayout>

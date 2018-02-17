@@ -8,7 +8,7 @@ import android.util.Log;
 /**
  * Manages a local database that contains data about the user's belongings
  */
-public class BelongingsDbHelper extends SQLiteOpenHelper{
+public class BelongingsDbHelper extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
 
@@ -20,13 +20,24 @@ public class BelongingsDbHelper extends SQLiteOpenHelper{
             + BelongingsContract.BelongingEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + BelongingsContract.BelongingEntry.COLUMN_BELONGING_IMAGE + " BLOB NOT NULL, "
             + BelongingsContract.BelongingEntry.COLUMN_BELONGING_NAME + " TEXT NOT NULL, "
-            + BelongingsContract.BelongingEntry.COLUMN_LAST_USED_DATE + " INTEGER );";
+            + BelongingsContract.BelongingEntry.COLUMN_LAST_USED_DATE + " INTEGER NOT NULL);";
+
+    // SQL "usage_log" table creation constant
+    public static final String SQL_CREATE_USAGE_LOG_TABLE = "CREATE TABLE "
+            + BelongingsContract.UsageLogEntry.TABLE_NAME + " ("
+            + BelongingsContract.BelongingEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + BelongingsContract.UsageLogEntry.COLUMN_BELONGING_ID + " INTEGER NOT NULL, "
+            + BelongingsContract.UsageLogEntry.COLUMN_USAGE_DATE + " INTEGER NOT NULL );";
 
     // SQL "belongings" table deletion constant
     public static final String SQL_DELETE_BELONGINGS_TABLE =
             "DROP TABLE " + BelongingsContract.BelongingEntry.TABLE_NAME;
 
-    public BelongingsDbHelper(Context context){
+    // SQL "usage_log" table deletion constant
+    public static final String SQL_DELETE_USAGE_LOG_TABLE =
+            "DROP TABLE " + BelongingsContract.UsageLogEntry.TABLE_NAME;
+
+    public BelongingsDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -38,19 +49,20 @@ public class BelongingsDbHelper extends SQLiteOpenHelper{
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.v("SQL_CHECK",SQL_CREATE_BELONGINGS_TABLE);
+        Log.v("SQL_CHECK", SQL_CREATE_BELONGINGS_TABLE);
         db.execSQL(SQL_CREATE_BELONGINGS_TABLE);
+        db.execSQL(SQL_CREATE_USAGE_LOG_TABLE);
     }
 
     /**
      * For now we simply implement this method because it is required
      * in order for the BelongingsDbHelper class to extend SQLiteOpenHelper.
      *
-     *
-     * @param db Database that is being upgraded
-     * @param oldVersion     The old database version
-     * @param newVersion     The new database version
+     * @param db         Database that is being upgraded
+     * @param oldVersion The old database version
+     * @param newVersion The new database version
      */
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    }
 }

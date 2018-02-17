@@ -2,7 +2,8 @@ package com.example.android.x_packrat;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -14,24 +15,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.x_packrat.data.BelongingsContract;
 
+/**
+ * The activity that launches when a user clicks on a recycler view list item's "logs" button
+ * in the MainActivity. Displays a list of all of the dates and times of usage for a single
+ * belonging.
+ */
 public class UsageLogsActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, UsageLogAdapter.UsageLogAdapterOnClickHandler {
 
     private final String TAG = UsageLogsActivity.class.getSimpleName();
-
-    /*
-     * The columns of data that we are interested in displaying within our UsageLogActivity's list
-     * of usage logs
-     */
-    public static final String[] USAGE_LOG_PROJECTION = {
-            BelongingsContract.BelongingEntry._ID,
-            BelongingsContract.UsageLogEntry.COLUMN_USAGE_DATE
-    };
 
     // Used to identify the loader responsible for loading our list of usage logs from the database
     private static final int ID_USAGE_LOGS_LOADER = 80;
@@ -51,16 +49,34 @@ public class UsageLogsActivity extends AppCompatActivity implements
     // Stores reference to message to display when the recycler view is empty
     private TextView mEmptyView;
 
+    // References text view used for displaying the belonging's name
+    private TextView mNameHeader;
+
+    // References the image view used to display the belonging's image
+    private ImageView mImageHeader;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_usage_logs);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_main_belongings);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_usage_logs);
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
         mEmptyView = (TextView) findViewById(R.id.empty_view);
+
+        mNameHeader = (TextView) findViewById(R.id.usage_log_belonging_header_text);
+
+        mImageHeader = (ImageView) findViewById(R.id.usage_log_belonging_header_image);
+
+        Intent intent = getIntent();
+
+        mNameHeader.setText(intent.getStringExtra("belonging_name"));
+
+        byte[] imgByte = intent.getByteArrayExtra("belonging_image");
+        Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
+        mImageHeader.setImageBitmap(bitmap);
 
         // Positions and measures item views within a RecyclerView to form a linear list
         LinearLayoutManager layoutManager =
@@ -81,6 +97,9 @@ public class UsageLogsActivity extends AppCompatActivity implements
 
         showLoading();
 
+        // Changes the title in the action bar to reflect that the user is viewing usage logs
+        setTitle(getString(R.string.usage_log_activity_title_text));
+
         // Initializes and starts a new loader if a loader with the given ID does not exist
         getSupportLoaderManager().initLoader(ID_USAGE_LOGS_LOADER, null, this);
     }
@@ -98,29 +117,29 @@ public class UsageLogsActivity extends AppCompatActivity implements
         switch (loaderId) {
 
             case ID_USAGE_LOGS_LOADER:
-                Intent intent = getIntent();
-                String belongingName = intent.getStringExtra("belonging_name");
-                String belongingId = String.valueOf(intent.
-                        getLongExtra("belonging_id", 0));
-                String tablePath = belongingName + BelongingsContract.UsageLogEntry.TABLE_NAME +
-                        belongingId;
-
-                // URI for all rows of usage dates for this belonging
-                Uri belongingsQueryUri = BelongingsContract.BASE_CONTENT_URI.buildUpon().
-                        appendPath(BelongingsContract.UsageLogEntry.TABLE_NAME).
-                        appendPath(tablePath).build();
-                BelongingsContract.UsageLogEntry.UNIQUE_TABLE_URI = belongingsQueryUri.toString();
-                BelongingsContract.UsageLogEntry.UNIQUE_TABLE_NAME = tablePath;
+                /*
+                 * The columns of data that we are interested in within our
+                 * UsageLogActivity's list of usage logs
+                 */
+                String[] projection = {
+                        BelongingsContract.UsageLogEntry.COLUMN_BELONGING_ID,
+                        BelongingsContract.UsageLogEntry.COLUMN_USAGE_DATE
+                };
 
                 // Sort belongings in descending order by last used date
                 String sortOrder = BelongingsContract.UsageLogEntry.
                         COLUMN_USAGE_DATE + " DESC";
 
+                // The rows of the database table that we are interested in
+                String selection = BelongingsContract.UsageLogEntry.COLUMN_BELONGING_ID + "=?";
+                String[] selectionArgs = new String[]{
+                        String.valueOf(getIntent().getLongExtra("belonging_id", 0))};
+
                 return new CursorLoader(this,
-                        belongingsQueryUri,
-                        USAGE_LOG_PROJECTION,
-                        null,
-                        null,
+                        BelongingsContract.UsageLogEntry.CONTENT_URI,
+                        projection,
+                        selection,
+                        selectionArgs,
                         sortOrder);
             default:
                 throw new RuntimeException("Loader Not Implemented: " + loaderId);
@@ -139,6 +158,8 @@ public class UsageLogsActivity extends AppCompatActivity implements
         mUsageLogAdapter.swapCursor(data);
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
         mRecyclerView.smoothScrollToPosition(mPosition);
+
+        // Checks if there is data to show. If not, displays message, else displays the data
         if (data.getCount() != 0) {
             showUsageLogDataView();
         } else {
@@ -227,5 +248,4 @@ public class UsageLogsActivity extends AppCompatActivity implements
 
         return super.onOptionsItemSelected(item);
     }
-
 }

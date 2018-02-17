@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:defaultValue="@string/pref_reminder_frequency_value_weekly"
+        android:entries="@array/pref_reminder_frequency_option_labels"
+        android:entryValues="@array/pref_reminder_frequency_option_values"
+        android:key="@string/pref_reminder_frequency_key"
+        android:title="@string/pref_reminder_frequency_label" />
+
+</PreferenceScreen>

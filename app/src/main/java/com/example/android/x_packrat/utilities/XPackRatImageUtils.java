@@ -13,9 +13,9 @@ public class XPackRatImageUtils {
     /**
      * Converts a Uri to a Bitmap image
      *
-     * @param  selectedImage    The Uri representation of the user's selected image
-     * @param  context          The context from which this method was called
-     * @return                  Bitmap representation of the user's selected image
+     * @param selectedImage The Uri representation of the user's selected image
+     * @param context       The context from which this method was called
+     * @return Bitmap representation of the user's selected image
      */
     public static Bitmap decodeUri(Context context, Uri selectedImage)
             throws FileNotFoundException {
@@ -53,9 +53,8 @@ public class XPackRatImageUtils {
      * Coverts a Bitmap to a byte array(byte[]). Used to convert images to a suitable format for
      * storage in the database as a Blob.
      *
-     * @param bitmap    The image to convert to a byte array
-     *
-     * @return          The byte array representation of the supplied Bitmap image
+     * @param bitmap The image to convert to a byte array
+     * @return The byte array representation of the supplied Bitmap image
      */
     public static byte[] getBitmapAsByteArray(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

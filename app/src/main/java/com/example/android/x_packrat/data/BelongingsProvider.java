@@ -12,14 +12,13 @@ import android.util.Log;
 /**
  * The content provider for this app. The middleman between the ContentResolver and the actual
  * database.
- *
  */
 public class BelongingsProvider extends ContentProvider {
 
-    // Reference to the manager of the local database
-    public static BelongingsDbHelper mDbHelper;
-
     public static final String LOG_TAG = BelongingsProvider.class.getSimpleName();
+
+    // Reference to the manager of the local database
+    private static BelongingsDbHelper mDbHelper;
 
     // URI matcher code for the content URI for the belongings table
     private static final int CODE_BELONGINGS = 100;
@@ -27,7 +26,8 @@ public class BelongingsProvider extends ContentProvider {
     // URI matcher code for the content URI for a single belonging in the belongings table
     private static final int CODE_BELONGINGS_WITH_ID = 101;
 
-    private static final int CODE_LOG_USAGE_TABLE = 102;
+    // URI matcher code for the content URI for the usage_log table
+    private static final int CODE_LOG_USAGE_TABLE = 103;
 
     // The matcher used to match int codes to URIs
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -43,7 +43,8 @@ public class BelongingsProvider extends ContentProvider {
      * @param projection    The desired table columns to query for
      * @param selection     An optional restriction to query for a specific row(s)
      * @param selectionArgs Used in conjunction with the selection statement to define restrictions
-     * @return              The appropriate information from the database table
+     * @param sortOrder     Indicates how to order the data in the returned cursor
+     * @return The appropriate information from the database table
      */
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
@@ -59,12 +60,12 @@ public class BelongingsProvider extends ContentProvider {
             case CODE_BELONGINGS:
                 // Queries for the entire "belongings" table
                 queryResults = database.query(BelongingsContract.BelongingEntry.TABLE_NAME,
-                        projection,selection, selectionArgs, null, null, sortOrder);
+                        projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case CODE_BELONGINGS_WITH_ID:
                 // Extracts out the ID from the URI
                 selection = BelongingsContract.BelongingEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
                 // Queries for a single row of the "belongings" table that has an id from
                 // selectionArgs
@@ -72,10 +73,10 @@ public class BelongingsProvider extends ContentProvider {
                         projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case CODE_LOG_USAGE_TABLE:
-                // Queries for an entire log usage table for a single belonging
-                String tableNameString = BelongingsContract.UsageLogEntry.UNIQUE_TABLE_NAME;
-                queryResults = database.query(tableNameString,
-                        projection,selection, selectionArgs, null, null, sortOrder);
+                selection = BelongingsContract.UsageLogEntry.COLUMN_BELONGING_ID + "=?";
+                // Queries for log usage table rows that are associated with the current belonging
+                queryResults = database.query(BelongingsContract.UsageLogEntry.TABLE_NAME,
+                        projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
@@ -91,7 +92,7 @@ public class BelongingsProvider extends ContentProvider {
      *
      * @param uri           The full URI to use for the insertion
      * @param contentValues The data to insert into the database
-     * @return              The content URI for the newly inserted database row
+     * @return The content URI for the newly inserted database row
      */
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
@@ -110,9 +111,9 @@ public class BelongingsProvider extends ContentProvider {
      * Inserts a belonging into the database with the given content values.
      * Does validation checking to ensure user cannot insert invalid data.
      *
-     * @param uri           The full URI to use for the insertion
-     * @param values        The data to insert into the database
-     * @return              The content URI for the newly inserted database row
+     * @param uri    The full URI to use for the insertion
+     * @param values The data to insert into the database
+     * @return The content URI for the newly inserted database row
      */
     private Uri insertBelonging(Uri uri, ContentValues values) {
 
@@ -125,14 +126,14 @@ public class BelongingsProvider extends ContentProvider {
         // Checks that the user has selected an image
         byte[] belonging_image = values.getAsByteArray(
                 BelongingsContract.BelongingEntry.COLUMN_BELONGING_IMAGE);
-        if(belonging_image == null){
+        if (belonging_image == null) {
             throw new IllegalArgumentException("Your belonging must have an image");
         }
 
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
         long newRowId = database.insert(BelongingsContract.BelongingEntry.TABLE_NAME,
-                null,values);
+                null, values);
 
         // If the ID is -1, then the insertion failed. Logs an error and returns null.
         if (newRowId == -1) {
@@ -147,18 +148,17 @@ public class BelongingsProvider extends ContentProvider {
 
     /**
      * Inserts a belonging into the database with the given content values.
-     * Does validation checking to ensure user cannot insert invalid data.
      *
-     * @param uri           The full URI to use for the insertion
-     * @param values        The data to insert into the database
-     * @return              The content URI for the newly inserted database row
+     * @param uri    The full URI to use for the insertion
+     * @param values The data to insert into the database
+     * @return The content URI for the newly inserted database row
      */
     private Uri insertUsageDate(Uri uri, ContentValues values) {
 
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
-        long newRowId = database.insert(BelongingsContract.UsageLogEntry.UNIQUE_TABLE_NAME,
-                null,values);
+        long newRowId = database.insert(BelongingsContract.UsageLogEntry.TABLE_NAME,
+                null, values);
 
         // If the ID is -1, then the insertion failed. Logs an error and returns null.
         if (newRowId == -1) {
@@ -178,7 +178,7 @@ public class BelongingsProvider extends ContentProvider {
      * @param contentValues The data to insert into the database
      * @param selection     A restriction to specify what specific rows to update
      * @param selectionArgs Used in conjunction with the selection statement to define restrictions
-     * @return              The number of rows that were updated
+     * @return The number of rows that were updated
      */
     @Override
     public int update(Uri uri, ContentValues contentValues, String selection,
@@ -190,7 +190,7 @@ public class BelongingsProvider extends ContentProvider {
             case CODE_BELONGINGS_WITH_ID:
                 // Extracts out the ID from the URI
                 selection = BelongingsContract.BelongingEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateBelongings(uri, contentValues, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Update is not supported for " + uri);
@@ -205,22 +205,22 @@ public class BelongingsProvider extends ContentProvider {
      * @param values        The data to update the database with
      * @param selection     A restriction to specify what specific rows to update
      * @param selectionArgs Used in conjunction with the selection statement to define restrictions
-     * @return              The number of rows that were updated
+     * @return The number of rows that were updated
      */
     private int updateBelongings(Uri uri, ContentValues values, String selection,
                                  String[] selectionArgs) {
 
         // Checks that the image is not null
-        if(values.containsKey(BelongingsContract.BelongingEntry.COLUMN_BELONGING_IMAGE)){
+        if (values.containsKey(BelongingsContract.BelongingEntry.COLUMN_BELONGING_IMAGE)) {
             byte[] belongingImage = values.getAsByteArray
                     (BelongingsContract.BelongingEntry.COLUMN_BELONGING_IMAGE);
-            if(belongingImage == null){
+            if (belongingImage == null) {
                 throw new IllegalArgumentException("Your belonging requires an image");
             }
         }
 
         // Checks that the name value is not null
-        if(values.containsKey(BelongingsContract.BelongingEntry.COLUMN_BELONGING_NAME)){
+        if (values.containsKey(BelongingsContract.BelongingEntry.COLUMN_BELONGING_NAME)) {
             String name =
                     values.getAsString(BelongingsContract.BelongingEntry.COLUMN_BELONGING_NAME);
             if (name == null) {
@@ -239,10 +239,10 @@ public class BelongingsProvider extends ContentProvider {
                 BelongingsContract.BelongingEntry.TABLE_NAME,
                 values,
                 selection,
-                selectionArgs );
+                selectionArgs);
 
         // Notifies registered listeners that the database has changed
-        if(numRowsUpdated > 0){
+        if (numRowsUpdated > 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
 
@@ -251,10 +251,11 @@ public class BelongingsProvider extends ContentProvider {
 
     /**
      * Deletes the data at the given selection and selection arguments.
+     *
      * @param uri           The full URI of the row(s) we wish to delete
      * @param selection     A restriction to specify what specific rows to delete
      * @param selectionArgs Used in conjunction with the selection statement to define restrictions
-     * @return              The number of rows that were deleted
+     * @return The number of rows that were deleted
      */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -268,17 +269,17 @@ public class BelongingsProvider extends ContentProvider {
                 // Delete all rows that match the selection and selection args
                 numRowsDeleted = database.delete(BelongingsContract.BelongingEntry.TABLE_NAME,
                         selection, selectionArgs);
-                if(numRowsDeleted > 0){
+                if (numRowsDeleted > 0) {
                     getContext().getContentResolver().notifyChange(uri, null);
                 }
                 break;
             case CODE_BELONGINGS_WITH_ID:
                 // Delete a single row given by the ID in the URI
                 selection = BelongingsContract.BelongingEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
-                numRowsDeleted =  database.delete(BelongingsContract.BelongingEntry.TABLE_NAME,
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                numRowsDeleted = database.delete(BelongingsContract.BelongingEntry.TABLE_NAME,
                         selection, selectionArgs);
-                if(numRowsDeleted > 0){
+                if (numRowsDeleted > 0) {
                     getContext().getContentResolver().notifyChange(uri, null);
                 }
                 break;
@@ -300,6 +301,8 @@ public class BelongingsProvider extends ContentProvider {
                 return BelongingsContract.BelongingEntry.CONTENT_LIST_TYPE;
             case CODE_BELONGINGS_WITH_ID:
                 return BelongingsContract.BelongingEntry.CONTENT_ITEM_TYPE;
+            case CODE_LOG_USAGE_TABLE:
+                return BelongingsContract.UsageLogEntry.CONTENT_LIST_TYPE;
             default:
                 throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
         }
@@ -321,8 +324,7 @@ public class BelongingsProvider extends ContentProvider {
         matcher.addURI(authority, BelongingsContract.PATH_BELONGINGS + "/#",
                 CODE_BELONGINGS_WITH_ID);
 
-        matcher.addURI(authority, BelongingsContract.UsageLogEntry.TABLE_NAME + "/*",
-                CODE_LOG_USAGE_TABLE);
+        matcher.addURI(authority, BelongingsContract.PATH_USAGE_LOG, CODE_LOG_USAGE_TABLE);
 
         return matcher;
     }
