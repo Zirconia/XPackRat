@@ -9,7 +9,11 @@ import android.net.Uri;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 
+/**
+ * Contains methods for performing conversions between URIs, image bitmaps and bytes
+ */
 public class XPackRatImageUtils {
+
     /**
      * Converts a Uri to a Bitmap image
      *
@@ -26,10 +30,10 @@ public class XPackRatImageUtils {
         BitmapFactory.decodeStream(context.getContentResolver().openInputStream(selectedImage),
                 null, o);
 
-        // The new size we want to scale to
+        // Size we wish to scale the image to
         final int REQUIRED_SIZE = 140;
 
-        // Finds the correct scale value. It should be a power of 2.
+        // Finds the correct scale value
         int width_tmp = o.outWidth, height_tmp = o.outHeight;
         int scale = 1;
         while (true) {
@@ -42,7 +46,7 @@ public class XPackRatImageUtils {
             scale *= 2;
         }
 
-        // Decode with inSampleSize
+        // Decodes with inSampleSize
         BitmapFactory.Options o2 = new BitmapFactory.Options();
         o2.inSampleSize = scale;
         return BitmapFactory.decodeStream(context.getContentResolver().openInputStream(selectedImage),

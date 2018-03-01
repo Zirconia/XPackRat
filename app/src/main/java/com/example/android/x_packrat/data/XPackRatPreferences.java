@@ -9,6 +9,10 @@ import com.example.android.x_packrat.sync.ReminderUtilities;
  * Contains methods used for the updating of shared preferences
  */
 public class XPackRatPreferences {
+
+    /*
+     * Defines textual meanings of periods of days with their corresponding int values
+     */
     public static final int DAYS_IN_A_WEEK = 7;
     public static final int DAYS_IN_TWO_WEEKS = 14;
     public static final int DAYS_IN_A_MONTH = 30;
@@ -28,10 +32,10 @@ public class XPackRatPreferences {
     }
 
     /**
-     * Converts the user's selected preference to an integer that represents the number of days
-     * that is typically associated with it.
+     * Converts the user's selected string preference to an integer that represents the number of
+     * days that is typically associated with it.
      *
-     * @param pref The new value that the user has set in Settings(shared preferences)
+     * @param pref The new value that the user has set in Settings
      * @return The integer value that is associated with the given string
      */
     private static int frequencyToDays(String pref) {

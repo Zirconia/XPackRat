@@ -32,7 +32,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".UsageLogsActivity" />
+        <activity
+            android:name=".UsageLogsActivity"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
 
         <!-- This is required for immediate syncs -->
         <service
@@ -49,7 +55,24 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".SettingsActivity">
+        <activity android:name=".SettingsActivity"/>
+        <activity android:name=".ChartsActivity" />
+        <activity android:name=".UsageLogEditorActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".UsageLogsActivity" />
+        </activity>
+        <activity android:name=".EditDiscardedActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity" />
+        </activity>>
+        <activity android:name=".EditSoldActivity">
+            <meta-data
+               android:name="android.support.PARENT_ACTIVITY"
+               android:value=".MainActivity" />
+        </activity>
+        <activity android:name=".EditDonatedActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />

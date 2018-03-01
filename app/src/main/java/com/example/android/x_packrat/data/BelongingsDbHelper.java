@@ -10,12 +10,14 @@ import android.util.Log;
  */
 public class BelongingsDbHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final String LOG_TAG = BelongingsDbHelper.class.getSimpleName();
 
-    public static final String DATABASE_NAME = "possessions.db";
+    private static final int DATABASE_VERSION = 1;
+
+    private static final String DATABASE_NAME = "possessions.db";
 
     // SQL "belongings" table creation constant
-    public static final String SQL_CREATE_BELONGINGS_TABLE = "CREATE TABLE "
+    private static final String SQL_CREATE_BELONGINGS_TABLE = "CREATE TABLE "
             + BelongingsContract.BelongingEntry.TABLE_NAME + " ("
             + BelongingsContract.BelongingEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + BelongingsContract.BelongingEntry.COLUMN_BELONGING_IMAGE + " BLOB NOT NULL, "
@@ -23,19 +25,57 @@ public class BelongingsDbHelper extends SQLiteOpenHelper {
             + BelongingsContract.BelongingEntry.COLUMN_LAST_USED_DATE + " INTEGER NOT NULL);";
 
     // SQL "usage_log" table creation constant
-    public static final String SQL_CREATE_USAGE_LOG_TABLE = "CREATE TABLE "
+    private static final String SQL_CREATE_USAGE_LOG_TABLE = "CREATE TABLE "
             + BelongingsContract.UsageLogEntry.TABLE_NAME + " ("
-            + BelongingsContract.BelongingEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + BelongingsContract.UsageLogEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + BelongingsContract.UsageLogEntry.COLUMN_BELONGING_ID + " INTEGER NOT NULL, "
-            + BelongingsContract.UsageLogEntry.COLUMN_USAGE_DATE + " INTEGER NOT NULL );";
+            + BelongingsContract.UsageLogEntry.COLUMN_USAGE_DATE + " INTEGER NOT NULL, "
+            + BelongingsContract.UsageLogEntry.COLUMN_USAGE_DESCRIPTION + " TEXT);";
+
+    // SQL "sold" table creation constant
+    private static final String SQL_CREATE_SOLD_TABLE = "CREATE TABLE "
+            + BelongingsContract.SoldEntry.TABLE_NAME + " ("
+            + BelongingsContract.SoldEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + BelongingsContract.SoldEntry.COLUMN_BELONGING_IMAGE + " BLOB NOT NULL, "
+            + BelongingsContract.SoldEntry.COLUMN_BELONGING_NAME + " TEXT NOT NULL, "
+            + BelongingsContract.SoldEntry.COLUMN_SOLD_TO + " TEXT);";
+
+    // SQL "discarded" table creation constant
+    private static final String SQL_CREATE_DISCARDED_TABLE = "CREATE TABLE "
+            + BelongingsContract.DiscardedEntry.TABLE_NAME + " ("
+            + BelongingsContract.DiscardedEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + BelongingsContract.DiscardedEntry.COLUMN_BELONGING_IMAGE + " BLOB NOT NULL, "
+            + BelongingsContract.DiscardedEntry.COLUMN_BELONGING_NAME + " TEXT NOT NULL);";
+
+    // SQL "donated" table creation constant
+    private static final String SQL_CREATE_DONATED_TABLE = "CREATE TABLE "
+            + BelongingsContract.DonatedEntry.TABLE_NAME + " ("
+            + BelongingsContract.DonatedEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + BelongingsContract.DonatedEntry.COLUMN_BELONGING_IMAGE + " BLOB NOT NULL, "
+            + BelongingsContract.DonatedEntry.COLUMN_BELONGING_NAME + " TEXT NOT NULL, "
+            + BelongingsContract.DonatedEntry.COLUMN_DONATED_TO + " TEXT);";
 
     // SQL "belongings" table deletion constant
-    public static final String SQL_DELETE_BELONGINGS_TABLE =
+    private static final String SQL_DELETE_BELONGINGS_TABLE =
             "DROP TABLE " + BelongingsContract.BelongingEntry.TABLE_NAME;
 
     // SQL "usage_log" table deletion constant
-    public static final String SQL_DELETE_USAGE_LOG_TABLE =
+    private static final String SQL_DELETE_USAGE_LOG_TABLE =
             "DROP TABLE " + BelongingsContract.UsageLogEntry.TABLE_NAME;
+
+    // SQL "sold" table deletion constant
+    private static final String SQL_DELETE_SOLD_TABLE =
+            "DROP TABLE " + BelongingsContract.SoldEntry.TABLE_NAME;
+
+    // SQL "discarded" table deletion constant
+    private static final String SQL_DELETE_DISCARDED_TABLE =
+            "DROP TABLE " + BelongingsContract.DiscardedEntry.TABLE_NAME;
+
+    // SQL "donated" table deletion constant
+    private static final String SQL_DELETE_DONATED_TABLE =
+            "DROP TABLE " + BelongingsContract.DonatedEntry.TABLE_NAME;
+
+
 
     public BelongingsDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -49,9 +89,11 @@ public class BelongingsDbHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.v("SQL_CHECK", SQL_CREATE_BELONGINGS_TABLE);
         db.execSQL(SQL_CREATE_BELONGINGS_TABLE);
         db.execSQL(SQL_CREATE_USAGE_LOG_TABLE);
+        db.execSQL(SQL_CREATE_SOLD_TABLE);
+        db.execSQL(SQL_CREATE_DISCARDED_TABLE);
+        db.execSQL(SQL_CREATE_DONATED_TABLE);
     }
 
     /**

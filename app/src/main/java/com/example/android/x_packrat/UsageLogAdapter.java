@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 
 import com.example.android.x_packrat.data.BelongingsContract;
 import com.example.android.x_packrat.utilities.XPackRatDateUtils;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,8 +28,8 @@ import java.util.Locale;
  */
 public class UsageLogAdapter extends RecyclerView.Adapter<UsageLogAdapter.
         UsageLogAdapterViewHolder> {
-    // Indicates that we want to use the layout "R.layout.usage_log_item" to display each
-    // item in the recycler view
+
+    // Indicates a layout we want to use for displaying recycler view list items
     private static final int VIEW_TYPE_LOGS = 5;
 
     // The context we use for utility methods, app resources and layout inflaters
@@ -46,7 +49,7 @@ public class UsageLogAdapter extends RecyclerView.Adapter<UsageLogAdapter.
     private Cursor mCursor;
 
     /**
-     * Creates a BelongingsAdapter.
+     * Creates a UsageLogAdapter.
      *
      * @param context      Used to talk to the UI and app resources
      * @param clickHandler The on-click handler for this adapter. This single handler is called
@@ -64,7 +67,7 @@ public class UsageLogAdapter extends RecyclerView.Adapter<UsageLogAdapter.
      *
      * @param viewGroup The ViewGroup that these ViewHolders are contained within
      * @param viewType  Used to determine what layout to use for displaying recycler view items
-     * @return A new BelongingsAdapterViewHolder that holds a View for a list item
+     * @return A new UsageLogAdapterViewHolder that holds a View for a list item
      */
     @Override
     public UsageLogAdapter.UsageLogAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup,
@@ -106,6 +109,11 @@ public class UsageLogAdapter extends RecyclerView.Adapter<UsageLogAdapter.
         // Reads the date from the cursor
         long dateInMillis = mCursor.getLong(mCursor.getColumnIndexOrThrow(
                 BelongingsContract.UsageLogEntry.COLUMN_USAGE_DATE));
+
+        String usageDescription = mCursor.getString(mCursor.getColumnIndexOrThrow(
+                BelongingsContract.UsageLogEntry.COLUMN_USAGE_DESCRIPTION));
+
+        usageLogAdapterViewHolder.usageDescriptionView.setText(usageDescription);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(dateInMillis);
@@ -160,7 +168,7 @@ public class UsageLogAdapter extends RecyclerView.Adapter<UsageLogAdapter.
      * completely new set of data, so we call notifyDataSetChanged to tell the RecyclerView to
      * update.
      *
-     * @param newCursor The new cursor to use as BelongingsAdapter's data source
+     * @param newCursor The new cursor to use as UsageLogAdapter's data source
      */
     void swapCursor(Cursor newCursor) {
         mCursor = newCursor;
@@ -176,6 +184,7 @@ public class UsageLogAdapter extends RecyclerView.Adapter<UsageLogAdapter.
         // All child views of a single item
         final TextView usageDateView;
         final TextView usageTimeView;
+        final TextView usageDescriptionView;
 
         /**
          * @param view The view to cache for later reuse
@@ -185,6 +194,7 @@ public class UsageLogAdapter extends RecyclerView.Adapter<UsageLogAdapter.
 
             usageDateView = (TextView) view.findViewById(R.id.date_used);
             usageTimeView = (TextView) view.findViewById(R.id.time_used);
+            usageDescriptionView = view.findViewById(R.id.usage_description);
 
             view.setOnClickListener(this);
         }
@@ -201,7 +211,7 @@ public class UsageLogAdapter extends RecyclerView.Adapter<UsageLogAdapter.
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
             long clickedItemId = mCursor.getLong(mCursor.getColumnIndexOrThrow(
-                    BelongingsContract.BelongingEntry._ID));
+                    BelongingsContract.UsageLogEntry._ID));
             mClickHandler.onClick(v, clickedItemId);
         }
     }

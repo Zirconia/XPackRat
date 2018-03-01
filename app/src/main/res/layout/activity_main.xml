@@ -1,39 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Layout for the main screen -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="com.example.android.x_packrat.MainActivity">
 
-    <!--Displays the list of the user's belongings for the MainActivity -->
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_main_belongings"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="8dp"/>
-
-    <!-- A progress bar that will be shown to users to indicate that belongings data is loading -->
-    <ProgressBar
-        android:id="@+id/pb_loading_indicator"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_gravity="center"
-        android:visibility="invisible" />
-
-    <!-- Displays a message for when the recycler view is empty -->
-    <TextView
-        android:id="@+id/empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone"
-        android:text="@string/no_data_available"
-        android:textSize="36sp"/>
-
-    <Button
-        android:id="@+id/dummyButton"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="testNotification"
-        android:onClick="testNotification"/>
+        android:layout_gravity="fill_horizontal"
+        app:tabMaxWidth="0dp"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        style="@style/MyCustomTabLayout"
+        android:drawSelectorOnTop="true"/>
 
-</FrameLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+</LinearLayout>

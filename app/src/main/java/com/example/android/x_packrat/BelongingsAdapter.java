@@ -20,7 +20,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 /**
- * An adapter class that works in conjunction with the recycler view to display the list of the
+ * An adapter class that works in conjunction with a recycler view to display the list of the
  * user's belongings. Its data source is a Cursor of belongings data from the local "possessions.db"
  * database.
  */
@@ -140,8 +140,9 @@ public class BelongingsAdapter extends RecyclerView.Adapter<BelongingsAdapter.
         Locale locale = XPackRatDateUtils.getUserLocale(mContext);
 
         // Sets the date that the belonging was last used to be displayed in a text view
-        BelongingsAdapterViewHolder.lastUsedDateView.setText(
-                XPackRatDateUtils.formatDate(locale, year, month, day));
+        String lastUsedDateText = mContext.getString(R.string.last_used_text) + " " +
+                XPackRatDateUtils.formatDate(locale, year, month, day);
+        BelongingsAdapterViewHolder.lastUsedDateView.setText(lastUsedDateText);
 
         // Sets the time that the belonging was last used to be displayed in a text view
         BelongingsAdapterViewHolder.lastUsedTimeView.setText(XPackRatDateUtils.formatTime(

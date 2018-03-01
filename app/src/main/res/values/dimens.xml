@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Belonging image size -->
-    <dimen name="list_belonging_image">40dp</dimen>
+    <dimen name="list_belonging_image">60dp</dimen>
 
     <!-- Margins for name of belonging -->
     <dimen name="list_belonging_name_left_margin">16dp</dimen>

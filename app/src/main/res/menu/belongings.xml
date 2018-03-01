@@ -6,12 +6,27 @@
         android:id="@+id/action_add_belonging"
         android:orderInCategory="100"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_add_white_36dp"
+        android:icon="@drawable/ic_add_black_36dp"
         android:title="@string/action_add_belonging"/>
+
+    <item
+        android:id="@+id/action_search"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_search_black_36dp"
+        android:title="@string/action_search"/>
+
+    <item
+        android:id="@+id/action_charts"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_pie_chart_black_36dp"
+        android:title="@string/action_charts"/>
 
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        app:showAsAction="never"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_settings_black_36dp"
         android:title="@string/action_settings"/>
 </menu>

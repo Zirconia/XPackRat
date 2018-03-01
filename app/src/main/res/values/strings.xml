@@ -13,8 +13,17 @@
     <!-- The content authority -->
     <string name="content_authority">com.example.android.x_packrat</string>
 
-    <!-- Used to open Settings Menu from MainActivity -->
+    <!-- Text for Settings menu option -->
     <string name="action_settings">Settings</string>
+
+    <!-- Text for Save menu option -->
+    <string name="action_save">Save</string>
+
+    <!-- Text for Charts menu option -->
+    <string name="action_charts">Charts</string>
+
+    <!-- Text for Search menu option -->
+    <string name="action_search">Search</string>
 
     <!-- Settings preference strings -->
     <string name="pref_reminder_frequency_label">Reminder Frequency</string>
@@ -32,6 +41,9 @@
     <!-- Title for add icon in MainActivity menu-->
     <string name="action_add_belonging">Add belonging</string>
 
+    <!-- Title for add icon in UsageLogActivity menu-->
+    <string name="action_add_usage_log">Add usage log</string>
+
     <!-- Title for delete icon in EditorActivity menu -->
     <string name="action_delete_belonging">Delete belonging</string>
 
@@ -41,23 +53,48 @@
     <!-- Label for the option to edit the name of a belonging in EditorActivity-->
     <string name="belonging_name_label">Name</string>
     <!-- Label for the option to change most recent use date in the EditorActivity-->
-    <string name="change_date_label">Date</string>
+    <string name="change_date_label">Most Recent Use Date</string>
+    <!-- Label for the option to change most recent use date in the UsageLogEditorActivity-->
+    <string name="change_use_date_label">Use Date</string>
     <!-- Label for the option to change most recent use time in the EditorActivity-->
-    <string name="change_time_label">Time</string>
+    <string name="change_time_label">Most Recent Use Time</string>
+    <!-- Label for the option to change use time in the UsageLogEditorActivity-->
+    <string name="change_use_time_label">Use Time</string>
     <!-- Hint text for the field to enter a belonging name -->
     <string name="hint_belonging_name">Name</string>
+
+    <!-- Hint text for the field to enter a usage log description -->
+    <string name="hint_usage_log_description">Description</string>
+
+    <!-- Text for the use description category of the UsageLogEditorActivity-->
+    <string name="use_description_text">Use Description</string>
+
+    <string name="sold_to_label">Sold To</string>
+
+    <string name="donated_to_label">Donated To</string>
 
     <!-- Generic content description for a belongings image in the EditorActivity-->
     <string name="editor_image_content_description">This is the image for this belonging.</string>
 
     <!-- Text for button to change a belonging's image in the EditorActivity-->
-    <string name="change_image_button">set image</string>
+    <string name="change_image_button">choose image</string>
 
     <!-- Action bar title for adding a belonging -->
     <string name="editor_activity_title_update_belonging">Update Belonging</string>
 
+    <!-- Action bar title for updating a usage log -->
+    <string name="editor_activity_title_update_usage_log">Update Usage Log</string>
+
+    <string name="belongings_tab_title">Belongings</string>
+    <string name="sold_tab_title">Sold</string>
+    <string name="discarded_tab_title">Discarded</string>
+    <string name="donated_tab_title">Donated</string>
+
     <!-- Action bar title for updating an existing belonging-->
     <string name="editor_activity_title_add_belonging">Add Belonging</string>
+
+    <!-- Action bar title for adding a usage log-->
+    <string name="editor_activity_title_add_usage_log">Add Usage Log</string>
 
     <!-- Action bar title for viewing usage logs -->
     <string name="usage_log_activity_title_text">Usage Logs</string>
@@ -118,17 +155,22 @@
     <string name="content_descrip_edit_ic">Edit belonging</string>
 
     <!-- Text for button to change most recent use date in EditorActivity -->
-    <string name="change_date_button">Change Date</string>
+    <string name="change_date_button">choose date</string>
 
     <!-- Text for button to change most recent use time in EditorActivity -->
-    <string name="change_time_button">change time</string>
+    <string name="change_time_button">choose time</string>
 
     <!-- Text to display when the recycler view has nothing to display in MainActivity-->
     <string name="no_data_available">Add a belonging using the + to get started</string>
 
+    <string name="no_data_available_sold">Add a belonging you\'ve sold using the +</string>
+
+    <string name="no_data_available_discarded">Add a belonging you\'ve discarded using the +</string>
+
+    <string name="no_data_available_donated">Add a belonging you\'ve donated using the +</string>
+
     <!-- Text to display when the recycler view has nothing to display in UsageLogActivity-->
-    <string name="no_logs_available">Usage dates that you have logged for this belonging,
-        appear here.</string>
+    <string name="no_logs_available">Add dates you\'ve used your belonging with the +</string>
 
     <!-- Text for main notification channel name-->
     <string name="main_notification_channel_name">Primary</string>
@@ -139,4 +181,58 @@
     <!-- Text for the notification body-->
     <string name="usage_reminder_notification_body">Maybe you should consider selling, discarding,
         or giving away that item(s).</string>
+
+    <!-- Text for the description of the pie chart of belongings displayed in the charts activity-->
+    <string name="pie_chart_description">Number of Uses by Belonging</string>
+
+    <!-- Text for the center of the pie chart of belongings displayed in the charts activity-->
+    <string name="pie_center_text_most">Most Used</string>
+
+    <!-- Text for the center of the pie chart of belongings displayed in the charts activity-->
+    <string name="pie_center_text_least">Least Used</string>
+
+    <!-- Text for the title of the pie chart-->
+    <string name="pie_chart_title_text_most">Most Recent</string>
+
+    <!-- Text for the title of the pie chart-->
+    <string name="pie_chart_title_text_least">Least Recent</string>
+
+    <!-- Text for the menu option to display a chart with the most recently used
+         belongings in ChartsActivity-->
+    <string name="action_most_recent">Most Recent</string>
+
+    <!-- Text for the menu option to display a chart with the least recently used
+         belongings in ChartsActivity-->
+    <string name="action_least_recent">Least Recent</string>
+
+    <!-- Text for the menu option to display a chart that compares the number of items in different
+    tab categories-->
+    <string name="action_category_comparison">Category Comparison</string>
+
+    <!-- Text for the title of the bar chart in ChartsActivity-->
+    <string name="bar_chart_title">Number of Items in Each Category</string>
+
+    <string name="pie_chart_title_most">Most Recently Used Belongings \n (Number of Times Used)</string>
+    <string name="pie_chart_title_least">Least Recently Used Belongings \n (Number of Times Used)</string>
+
+    <!-- Text for the "last used" phrase in each Recylerview item in Belongings fragment-->
+    <string name="last_used_text">Used: </string>
+
+    <string name="sold_to_text">Sold to: </string>
+
+    <string name="donated_to_text">Donated to: </string>
+
+    <string name="action_save_usage_log">Save</string>
+    <string name="action_delete_usage_log">Delete</string>
+    <string name="bar_chart_label">Number of Items in Each Category</string>
+    <string name="pie_chart_toast_text_used">Used</string>
+    <string name="pie_chart_toast_text_times">time(s)</string>
+
+    <string name="usage_log_toast_text_succ">Log updated successfully</string>
+    <string name="usage_log_toast_text_fail">Failed to update log</string>
+    <string name="usage_log_toast_text_add_succ">Log added successfully</string>
+    <string name="usage_log_toast_text_add_fail">Failed to add log</string>
+    <string name="usage_log_toast_text_del_succ">Log deleted successfully</string>
+    <string name="usage_log_toast_text_del_fail">Failed to delete log</string>
+    <string name="usage_log_delete_dialog_msg">Delete this log</string>
 </resources>

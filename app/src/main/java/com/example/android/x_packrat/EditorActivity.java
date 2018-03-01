@@ -16,9 +16,12 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -120,8 +123,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.
         // Enables up navigation arrow in tool bar
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        } else if (getActionBar() != null) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         // Gets references to all views in this activity

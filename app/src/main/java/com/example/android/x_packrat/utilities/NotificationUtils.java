@@ -107,7 +107,8 @@ public class NotificationUtils {
         }
 
         // Notifies the notification manager that we have built a new notification
-        notificationManager.notify(USAGE_REMINDER_NOTIFICATION_ID, notificationBuilder.build());
+        if(notificationManager != null)
+            notificationManager.notify(USAGE_REMINDER_NOTIFICATION_ID, notificationBuilder.build());
     }
 
     /**
@@ -134,8 +135,7 @@ public class NotificationUtils {
      */
     private static Bitmap largeIcon(Context context) {
         Resources res = context.getResources();
-        Bitmap largeIcon = BitmapFactory.decodeResource(res, R.drawable.ic_launcher_foreground);
-        return largeIcon;
+        return BitmapFactory.decodeResource(res, R.drawable.ic_launcher_foreground);
     }
 
     /**
@@ -146,7 +146,8 @@ public class NotificationUtils {
     public static void clearAllNotifications(Context context) {
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancelAll();
+        if(notificationManager != null)
+            notificationManager.cancelAll();
     }
 
     /**
@@ -164,22 +165,20 @@ public class NotificationUtils {
                 ignoreReminderIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Action ignoreReminderAction = new NotificationCompat.Action(
+        return new NotificationCompat.Action(
                 R.drawable.ic_add_white_36dp,
                 "No, thanks.",
                 ignoreReminderPendingIntent);
-
-        return ignoreReminderAction;
     }
 
     /**
      * Helper method that supplies the cursor for the call to ReminderUtilities's
      * hasLongUnusedBelonging method in this class's remindOfLongUnusedBelonging method.
      * The data in the cursor is used to determine whether or not there are any belongings
-     * that have not been used in a long time.
+     * that the user has not used in a long time.
      *
      * @param context The context from which this method was called
-     * @return Cursor containing the result of a query of the local database("possessions.db)
+     * @return Cursor containing the result of a query of the local database "possessions.db"
      */
     private static Cursor queryForLongUnused(Context context) {
         String[] projection = {
@@ -195,14 +194,13 @@ public class NotificationUtils {
 
         BelongingsDbHelper belongingsDbHelper = new BelongingsDbHelper(context);
         SQLiteDatabase database = belongingsDbHelper.getReadableDatabase();
-        Cursor queryResults = context.getContentResolver().query(
+
+        return context.getContentResolver().query(
                 BelongingsContract.BelongingEntry.CONTENT_URI,
                 projection,
                 null,
                 null,
                 sortOrder
         );
-
-        return queryResults;
     }
 }

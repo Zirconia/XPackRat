@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#F8BBD0</color>
+    <color name="colorPrimaryDark">#F48FB1</color>
+    <color name="colorAccent">#000000</color>
 
-    <!--  Color for the text that indicates when a belonging has last been used-->
+    <!--  Color for the text that indicates when a belonging has last been used on a RecyclerView
+    item-->
     <color name="last_used_text_color">#727272</color>
+
+    <!--Text color for tabs that are not being selected-->
+    <color name="tab_Default_color">#F5F5F5</color>
+
+    <!-- Text color for titles in action bar-->
+    <color name="action_bar_title_color">#000000</color>
 </resources>

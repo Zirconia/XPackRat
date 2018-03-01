@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.android.x_packrat.UsageLogEditorActivity">
+
+    <!-- Name for belonging -->
+    <LinearLayout
+        android:id="@+id/container_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Label -->
+        <TextView
+            android:text="@string/use_description_text"
+            style="@style/CategoryStyle"/>
+
+        <!-- Input fields -->
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:paddingLeft="4dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:orientation="vertical">
+
+            <!-- Name field -->
+            <com.example.android.x_packrat.TouchableEditText
+                android:id="@+id/edit_use_description"
+                android:hint="@string/hint_usage_log_description"
+                android:inputType="textMultiLine"
+                android:maxLines="2"
+                style="@style/EditorFieldStyle"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Most Recent use date for belonging -->
+    <LinearLayout
+        android:id="@+id/container_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/container_name">
+
+        <!-- Label -->
+        <TextView
+            android:text="@string/change_use_date_label"
+            style="@style/CategoryStyle"/>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:paddingLeft="4dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/log_editor_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/log_change_date_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/change_date_button"
+                android:textColor="@color/tab_Default_color"
+                style="@style/Widget.AppCompat.Button.Colored"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Most Recent use time for belonging -->
+    <LinearLayout
+        android:id="@+id/container_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/container_date">
+
+        <!-- Label -->
+        <TextView
+            style="@style/CategoryStyle"
+            android:text="@string/change_use_time_label" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:paddingLeft="4dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:layout_gravity="center_vertical|start">
+
+            <TextView
+                android:id="@+id/log_editor_time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/log_change_time_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/change_time_button"
+                android:textColor="@color/tab_Default_color"
+                style="@style/Widget.AppCompat.Button.Colored"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

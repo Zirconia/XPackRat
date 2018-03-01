@@ -4,11 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
-    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:minHeight="?android:attr/listPreferredItemHeightLarge"
     android:paddingBottom="@dimen/list_belogning_padding_vertical"
     android:paddingLeft="@dimen/list_belogning_padding_horizontal"
     android:paddingRight="@dimen/list_belogning_padding_horizontal"
-    android:paddingTop="@dimen/list_belogning_padding_vertical">
+    android:paddingTop="@dimen/list_belogning_padding_vertical"
+    android:background="@color/tab_Default_color">
 
     <ImageView
         android:id="@+id/belonging_image"
@@ -27,31 +28,36 @@
         android:layout_marginLeft="@dimen/list_belonging_name_left_margin"
         android:layout_marginStart="@dimen/list_belonging_name_start_margin"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="@color/action_bar_title_color"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintLeft_toRightOf="@+id/belonging_image"
         tools:text="Portable Heater"/>
 
-    <TextView
-        android:id="@+id/last_used_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@color/last_used_text_color"
-        app:layout_constraintLeft_toLeftOf="@+id/belonging_name"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
-        tools:text="Feb 4 2018"/>
+        <TextView
+            android:id="@+id/last_used_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/action_bar_title_color"
+            app:layout_constraintLeft_toLeftOf="@id/belonging_name"
+            app:layout_constraintTop_toBottomOf="@id/guideline"
+            tools:text="Feb 4 2018" />
 
     <TextView
         android:id="@+id/last_used_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@color/last_used_text_color"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginLeft="@dimen/list_belonging_last_used_left_margin"
-        android:layout_marginStart="@dimen/list_belonging_last_used_start_margin"
+        android:layout_marginStart="@dimen/list_belonging_last_used_left_margin"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/action_bar_title_color"
+        app:layout_constraintEnd_toStartOf="@+id/main_log_usage_button"
         app:layout_constraintLeft_toRightOf="@+id/last_used_date"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
-        tools:text="3:19PM"/>
+        app:layout_constraintTop_toBottomOf="@id/guideline"
+        tools:text="3:19PM" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
@@ -60,22 +66,18 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.5"/>
 
-    <ImageView
-        android:id="@+id/content_descrip_edit_ic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/content_descrip_edit_ic"
-        android:src="@drawable/ic_edit_white_36dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
-        app:layout_constraintLeft_toRightOf="@id/belonging_name"/>
-
     <Button
         android:id="@+id/main_log_usage_button"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Button"
-        app:layout_constraintLeft_toRightOf="@id/content_descrip_edit_ic"
-        app:layout_constraintRight_toRightOf="parent"/>
+        android:layout_weight="1"
+        android:textColor="@color/tab_Default_color"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:text="usage logs"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guideline"
+        app:layout_constraintBottom_toTopOf="@id/guideline"/>
 
 </android.support.constraint.ConstraintLayout>

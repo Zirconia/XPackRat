@@ -1,14 +1,19 @@
 package com.example.android.x_packrat;
 
+import android.content.ContentUris;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -95,10 +100,20 @@ public class UsageLogsActivity extends AppCompatActivity implements
         // be displayed
         mRecyclerView.setAdapter(mUsageLogAdapter);
 
+        // Adds divider line between recycler view items
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                mRecyclerView.getContext(), layoutManager.getOrientation());
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
+
         showLoading();
 
         // Changes the title in the action bar to reflect that the user is viewing usage logs
         setTitle(getString(R.string.usage_log_activity_title_text));
+
+        // Enables up navigation arrow in tool bar
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         // Initializes and starts a new loader if a loader with the given ID does not exist
         getSupportLoaderManager().initLoader(ID_USAGE_LOGS_LOADER, null, this);
@@ -122,11 +137,13 @@ public class UsageLogsActivity extends AppCompatActivity implements
                  * UsageLogActivity's list of usage logs
                  */
                 String[] projection = {
+                        BelongingsContract.UsageLogEntry._ID,
                         BelongingsContract.UsageLogEntry.COLUMN_BELONGING_ID,
-                        BelongingsContract.UsageLogEntry.COLUMN_USAGE_DATE
+                        BelongingsContract.UsageLogEntry.COLUMN_USAGE_DATE,
+                        BelongingsContract.UsageLogEntry.COLUMN_USAGE_DESCRIPTION
                 };
 
-                // Sort belongings in descending order by last used date
+                // Sort belongings in descending order by usage date
                 String sortOrder = BelongingsContract.UsageLogEntry.
                         COLUMN_USAGE_DATE + " DESC";
 
@@ -187,7 +204,17 @@ public class UsageLogsActivity extends AppCompatActivity implements
      */
     @Override
     public void onClick(View v, long clickedItemId) {
+        Uri clickedBelongingUri = ContentUris.withAppendedId(BelongingsContract.UsageLogEntry.
+                CONTENT_URI, clickedItemId);
 
+        Intent editUsageLogIntent = new Intent(this, UsageLogEditorActivity.class);
+        editUsageLogIntent.setData(clickedBelongingUri);
+
+        //Intent intent = getIntent();
+        //editUsageLogIntent.putExtra("belonging_name",intent.getStringExtra("belonging_name"));
+        //editUsageLogIntent.putExtra("belonging_image",intent.getByteArrayExtra("belonging_image"));
+
+        startActivity(editUsageLogIntent);
     }
 
     /**
@@ -196,6 +223,7 @@ public class UsageLogsActivity extends AppCompatActivity implements
     private void showUsageLogDataView() {
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
+        mEmptyView.setVisibility(View.GONE);
     }
 
     /**
@@ -204,6 +232,7 @@ public class UsageLogsActivity extends AppCompatActivity implements
     private void showLoading() {
         mRecyclerView.setVisibility(View.INVISIBLE);
         mLoadingIndicator.setVisibility(View.VISIBLE);
+        mEmptyView.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -211,8 +240,8 @@ public class UsageLogsActivity extends AppCompatActivity implements
      * the view for the empty recycler view state visible.
      */
     private void showEmptyView() {
-        mRecyclerView.setVisibility(View.INVISIBLE);
-        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.GONE);
+        mLoadingIndicator.setVisibility(View.GONE);
         mEmptyView.setVisibility(View.VISIBLE);
     }
 
@@ -225,7 +254,7 @@ public class UsageLogsActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.belongings, menu);
+        inflater.inflate(R.menu.usage_logs, menu);
         return true;
     }
 
@@ -241,8 +270,14 @@ public class UsageLogsActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         switch (item.getItemId()) {
-            case R.id.action_add_belonging:
-                startActivity(new Intent(this, EditorActivity.class));
+            case R.id.action_add_usage_log:
+                Intent intent = new Intent(this, UsageLogEditorActivity.class);
+                intent.putExtra("belonging_id", getIntent().getLongExtra("belonging_id",0));
+                startActivity(intent);
+                return true;
+            case android.R.id.home:
+                // If the belonging hasn't changed, continue with navigating up to MainActivity
+                NavUtils.navigateUpFromSameTask(UsageLogsActivity.this);
                 return true;
         }
 
