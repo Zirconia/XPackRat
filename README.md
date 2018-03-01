@@ -1,3 +1,3 @@
 # XPackRat
 An inventory and reminder app for Android. The app is intended for home use and allows users to keep track of and organize their belongings. The app encourages users to regularly use the logging feature to indicate whenever they have used an item. This is so that it will know how frequently the user has used each of their belongings. It uses this logged data to create charts that display usage statistics and to create notifications that suggest that the user discard, sell or donate items that they do not frequently use. 
-The app utilizes the MPAndroidChart library to provide visual representations of the user's belongings data. The reminders are intended to cause users to become less of a pack rat litte by litte.
+The app utilizes the MPAndroidChart library to provide visual representations of the user's belongings data. The reminders are intended to cause users to become less of a pack rat little by little.
