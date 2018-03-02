@@ -1,24 +1,21 @@
 package com.example.android.x_packrat;
 
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,16 +26,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.x_packrat.data.BelongingsContract;
-import com.example.android.x_packrat.sync.ReminderUtilities;
 
 /**
  * The fragment on which the recycler view list of the user's discarded belongings is displayed
  */
 public class DiscardedFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>
-        , DiscardedAdapter.DiscardedAdapterOnClickHandler{
+        , DiscardedAdapter.DiscardedAdapterOnClickHandler, SearchView.OnQueryTextListener {
 
     // The activity that this fragment is attached to
     MainActivity mActivity;
+
+    // Stores any text that the user enters into the search view in the action bar
+    public static String sSearchConstraint;
 
     /*
      * The columns of data that we are interested in within our MainActivity's list of
@@ -134,8 +133,17 @@ public class DiscardedFragment extends Fragment implements LoaderManager.LoaderC
         switch (loaderId) {
 
             case ID_DISCARDED_BELONGINGS_LOADER:
-                // URI for all rows in "discarded" table
-                Uri belongingsQueryUri = BelongingsContract.DiscardedEntry.CONTENT_URI;
+
+                Uri belongingsQueryUri;
+
+                // Sets the query uri to be the one for retrieving all rows of the "discarded"
+                // table if the user has not entered any text in the action bar search view
+                if (!TextUtils.isEmpty(sSearchConstraint)) {
+                    belongingsQueryUri = BelongingsContract.DiscardedEntry.CONTENT_URI.buildUpon().
+                            appendPath(sSearchConstraint).build();
+                } else {
+                    belongingsQueryUri = BelongingsContract.DiscardedEntry.CONTENT_URI;
+                }
 
                 // Sort belongings in descending order by name
                 String sortOrder = BelongingsContract.DiscardedEntry.
@@ -170,7 +178,7 @@ public class DiscardedFragment extends Fragment implements LoaderManager.LoaderC
         // Checks if there is data to show. If not, displays message, else displays the data
         if (data.getCount() != 0) {
             showBelongingsDataView();
-        } else {
+        } else if (TextUtils.isEmpty(sSearchConstraint)) {
             showEmptyView();
         }
     }
@@ -212,6 +220,10 @@ public class DiscardedFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.discarded, menu);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -261,5 +273,17 @@ public class DiscardedFragment extends Fragment implements LoaderManager.LoaderC
         mRecyclerView.setVisibility(View.INVISIBLE);
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         mEmptyView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        sSearchConstraint = !TextUtils.isEmpty(newText) ? newText : null;
+        getLoaderManager().restartLoader(ID_DISCARDED_BELONGINGS_LOADER, null, this);
+        return true;
     }
 }

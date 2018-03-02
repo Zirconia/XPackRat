@@ -11,10 +11,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import java.util.regex.Matcher;
-
-import static com.example.android.x_packrat.data.BelongingsContract.PATH_SOLD;
-
 /**
  * The content provider for this app. The middleman between the ContentResolver and the actual
  * database.
@@ -35,6 +31,8 @@ public class BelongingsProvider extends ContentProvider {
     // For the content URI for a single belonging in the "belongings" table
     private static final int CODE_BELONGINGS_WITH_ID = 801;
 
+    private static final int CODE_BELONGINGS_WITH_SEARCH_FILTER = 810;
+
     // For the content URI for the usage_log table
     private static final int CODE_LOG_USAGE_TABLE = 802;
 
@@ -47,17 +45,23 @@ public class BelongingsProvider extends ContentProvider {
     // For the content URI for a single log in the "usage_log" table
     private static final int CODE_SOLD_WITH_ID = 805;
 
+    private static final int CODE_SOLD_WITH_SEARCH_FILTER = 811;
+
     // For the content URI for the usage_log table
     private static final int CODE_DISCARDED = 806;
 
     // For the content URI for a single log in the "usage_log" table
     private static final int CODE_DISCARDED_WITH_ID = 807;
 
+    private static final int CODE_DISCARDED_WITH_SEARCH_FILTER = 812;
+
     // For the content URI for the usage_log table
     private static final int CODE_DONATED = 808;
 
     // For a single log in the "usage_log" table
     private static final int CODE_DONATED_WITH_ID = 809;
+
+    private static final int CODE_DONATED_WITH_SEARCH_FILTER = 813;
 
     // The matcher used to match int codes to URIs
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -105,6 +109,13 @@ public class BelongingsProvider extends ContentProvider {
                 queryResults = database.query(BelongingsContract.BelongingEntry.TABLE_NAME,
                         projection, selection, selectionArgs, null, null, sortOrder);
                 break;
+            case CODE_BELONGINGS_WITH_SEARCH_FILTER:
+                selection = BelongingsContract.BelongingEntry.COLUMN_BELONGING_NAME + " LIKE ?";
+                selectionArgs = new String[]{"%" + uri.getLastPathSegment() + "%"};
+
+                queryResults = database.query(BelongingsContract.BelongingEntry.TABLE_NAME,
+                        projection, selection, selectionArgs, null, null, sortOrder);
+                break;
             case CODE_LOG_USAGE_TABLE:
                 // Queries for "usage_log" table rows that are associated with the belonging whose
                 // "Usage Logs" button the user has clicked
@@ -132,6 +143,13 @@ public class BelongingsProvider extends ContentProvider {
                 queryResults = database.query(BelongingsContract.SoldEntry.TABLE_NAME,
                         projection, selection, selectionArgs, null, null, sortOrder);
                 break;
+            case CODE_SOLD_WITH_SEARCH_FILTER:
+                selection = BelongingsContract.SoldEntry.COLUMN_BELONGING_NAME + " LIKE ?";
+                selectionArgs = new String[]{"%" + uri.getLastPathSegment() + "%"};
+
+                queryResults = database.query(BelongingsContract.SoldEntry.TABLE_NAME,
+                        projection, selection, selectionArgs, null, null, sortOrder);
+                break;
             case CODE_DISCARDED:
                 // Queries for the entire "discarded" table
                 queryResults = database.query(BelongingsContract.DiscardedEntry.TABLE_NAME,
@@ -142,6 +160,13 @@ public class BelongingsProvider extends ContentProvider {
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
                 // Queries for single "discarded" table row
+                queryResults = database.query(BelongingsContract.DiscardedEntry.TABLE_NAME,
+                        projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case CODE_DISCARDED_WITH_SEARCH_FILTER:
+                selection = BelongingsContract.DiscardedEntry.COLUMN_BELONGING_NAME + " LIKE ?";
+                selectionArgs = new String[]{"%" + uri.getLastPathSegment() + "%"};
+
                 queryResults = database.query(BelongingsContract.DiscardedEntry.TABLE_NAME,
                         projection, selection, selectionArgs, null, null, sortOrder);
                 break;
@@ -157,6 +182,13 @@ public class BelongingsProvider extends ContentProvider {
                 // Queries for single "donated" table row
                 queryResults = database.query(BelongingsContract.DonatedEntry.TABLE_NAME,
                         projection, selection, selectionArgs, null, null, sortOrder);
+            case CODE_DONATED_WITH_SEARCH_FILTER:
+                selection = BelongingsContract.DonatedEntry.COLUMN_BELONGING_NAME + " LIKE ?";
+                selectionArgs = new String[]{"%" + uri.getLastPathSegment() + "%"};
+
+                queryResults = database.query(BelongingsContract.DonatedEntry.TABLE_NAME,
+                        projection, selection, selectionArgs, null, null, sortOrder);
+                break;
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
@@ -829,6 +861,9 @@ public class BelongingsProvider extends ContentProvider {
         matcher.addURI(authority, BelongingsContract.PATH_BELONGINGS + "/#",
                 CODE_BELONGINGS_WITH_ID);
 
+        matcher.addURI(authority, BelongingsContract.PATH_BELONGINGS + "/*",
+                CODE_BELONGINGS_WITH_SEARCH_FILTER);
+
         matcher.addURI(authority, BelongingsContract.PATH_USAGE_LOG, CODE_LOG_USAGE_TABLE);
 
         matcher.addURI(authority, BelongingsContract.PATH_USAGE_LOG + "/#",
@@ -838,14 +873,22 @@ public class BelongingsProvider extends ContentProvider {
 
         matcher.addURI(authority, BelongingsContract.PATH_SOLD + "/#", CODE_SOLD_WITH_ID);
 
+        matcher.addURI(authority, BelongingsContract.PATH_SOLD + "/*", CODE_SOLD_WITH_SEARCH_FILTER);
+
         matcher.addURI(authority, BelongingsContract.PATH_DISCARDED, CODE_DISCARDED);
 
         matcher.addURI(authority, BelongingsContract.PATH_DISCARDED + "/#",
                 CODE_DISCARDED_WITH_ID);
 
+        matcher.addURI(authority, BelongingsContract.PATH_DISCARDED + "/*",
+                CODE_DISCARDED_WITH_SEARCH_FILTER);
+
         matcher.addURI(authority, BelongingsContract.PATH_DONATED, CODE_DONATED);
 
         matcher.addURI(authority, BelongingsContract.PATH_DONATED + "/#", CODE_DONATED_WITH_ID);
+
+        matcher.addURI(authority, BelongingsContract.PATH_DONATED + "/*",
+                CODE_DONATED_WITH_SEARCH_FILTER);
 
         return matcher;
     }

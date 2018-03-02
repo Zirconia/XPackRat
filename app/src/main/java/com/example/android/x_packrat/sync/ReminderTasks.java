@@ -1,7 +1,9 @@
 package com.example.android.x_packrat.sync;
 
 import android.content.Context;
+import android.content.Intent;
 
+import com.example.android.x_packrat.MainActivity;
 import com.example.android.x_packrat.utilities.NotificationUtils;
 
 /**
@@ -13,6 +15,7 @@ public class ReminderTasks {
      * Indicates the task that we wish to execute
      */
     public static final String ACTION_DISMISS_NOTIFICATION = "dismiss-notification";
+    public static final String ACTION_CHECK_BELONGINGS = "check-belongings";
     static final String ACTION_USAGE_REMINDER = "usage-reminder";
 
     /**
@@ -27,6 +30,8 @@ public class ReminderTasks {
             NotificationUtils.clearAllNotifications(context);
         } else if (ACTION_USAGE_REMINDER.equals(action)) {
             issueUsageReminder(context);
+        } else if (ACTION_CHECK_BELONGINGS.equals(action)) {
+            launchMainActivity(context);
         }
     }
 
@@ -37,5 +42,13 @@ public class ReminderTasks {
      */
     private static void issueUsageReminder(Context context) {
         NotificationUtils.remindOfLongUnusedBelonging(context);
+    }
+
+    /**
+     * @param context The context from which this function was called
+     */
+    private static void launchMainActivity(Context context) {
+        Intent checkBelongingsIntent = new Intent(context, MainActivity.class);
+        context.startActivity(checkBelongingsIntent);
     }
 }

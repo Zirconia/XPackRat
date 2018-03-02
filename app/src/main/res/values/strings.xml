@@ -176,11 +176,19 @@
     <string name="main_notification_channel_name">Primary</string>
 
     <!-- Text for the notification title-->
-    <string name="usage_reminder_notification_title">You haven\'t used a belonging(s) lately.</string>
+    <string name="usage_reminder_notification_title">You have a belonging that you have not used in
+        awhile.</string>
 
     <!-- Text for the notification body-->
     <string name="usage_reminder_notification_body">Maybe you should consider selling, discarding,
-        or giving away that item(s).</string>
+        or giving away some of your things.</string>
+
+    <!-- Text for the notification action option to dismiss a notification-->
+    <string name="notification_action_dismiss">Dismiss</string>
+
+    <!-- Text for the notification action option to check belongings by bringing this app into
+    the foreground-->
+    <string name="notification_action_check_belongings">Check it out</string>
 
     <!-- Text for the description of the pie chart of belongings displayed in the charts activity-->
     <string name="pie_chart_description">Number of Uses by Belonging</string>

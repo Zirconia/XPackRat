@@ -103,6 +103,10 @@ public class BelongingsAdapter extends RecyclerView.Adapter<BelongingsAdapter.
                                  int position) {
         mCursor.moveToPosition(position);
 
+        // Reads the name of the belonging from the cursor
+        String belongingName = mCursor.getString(mCursor.getColumnIndexOrThrow(
+                BelongingsContract.BelongingEntry.COLUMN_BELONGING_NAME));
+
         // Reads the belonging's image from the cursor as a Blob(array of bytes in this case)
         byte[] belongingImageBytes = mCursor.getBlob(mCursor.getColumnIndexOrThrow(
                 BelongingsContract.BelongingEntry.COLUMN_BELONGING_IMAGE));
@@ -114,9 +118,6 @@ public class BelongingsAdapter extends RecyclerView.Adapter<BelongingsAdapter.
         // Sets the belonging's image to be displayed in an image view for this view holder
         BelongingsAdapterViewHolder.belongingImageView.setImageBitmap(belongingBitmap);
 
-        // Reads the name of the belonging from the cursor
-        String belongingName = mCursor.getString(mCursor.getColumnIndexOrThrow(
-                BelongingsContract.BelongingEntry.COLUMN_BELONGING_NAME));
 
         // Sets the name of the belonging to be displayed in a text view for this view holder
         BelongingsAdapterViewHolder.nameView.setText(belongingName);
@@ -197,7 +198,6 @@ public class BelongingsAdapter extends RecyclerView.Adapter<BelongingsAdapter.
         final TextView lastUsedDateView;
         final TextView lastUsedTimeView;
         final Button logUsageButton;
-
         /**
          * @param view The view to cache for later reuse
          */

@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -31,14 +30,21 @@ public class NotificationUtils {
 
     // Used to access notifications after they have been displayed(for updating or cancelling)
     private static final int USAGE_REMINDER_NOTIFICATION_ID = 1138;
+
     // Unique identifier for accessing a pending intent
     private static final int USAGE_REMINDER_PENDING_INTENT_ID = 3417;
+
     // Unique identifier for the notification channel that will be associated with notifications
     // from this app(used in Android O)
     private static final String USAGE_REMINDER_NOTIFICATION_CHANNEL_ID =
             "reminder_notification_channel";
+
     // Unique identifier for the pending intent that handles dismissing a notification
     private static final int ACTION_IGNORE_PENDING_INTENT_ID = 14;
+
+    // Unique identifier for the pending intent that handles launches the main activity of the app
+    // when the user chooses to check their belongings
+    private static final int ACTION_CHECK_BELONGINGS_INTENT_ID = 17;
 
     /**
      * Creates and displays the notification that informs the user that they have a belonging or
@@ -96,6 +102,7 @@ public class NotificationUtils {
                         context.getString(R.string.usage_reminder_notification_body)))
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setContentIntent(contentIntent(context))
+                .addAction(checkBelongingsAction(context))
                 .addAction(ignoreReminderAction(context))
                 .setAutoCancel(true);
 
@@ -135,7 +142,7 @@ public class NotificationUtils {
      */
     private static Bitmap largeIcon(Context context) {
         Resources res = context.getResources();
-        return BitmapFactory.decodeResource(res, R.drawable.ic_launcher_foreground);
+        return BitmapFactory.decodeResource(res, R.drawable.ic_image_black_36dp);
     }
 
     /**
@@ -151,7 +158,7 @@ public class NotificationUtils {
     }
 
     /**
-     * Gets the Bitmap Representation of the image to use for the notification's large icon
+     *
      *
      * @param context The context from which this method was called
      * @return The action associated with dismissing a notification
@@ -166,9 +173,28 @@ public class NotificationUtils {
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         return new NotificationCompat.Action(
-                R.drawable.ic_add_white_36dp,
-                "No, thanks.",
+                R.drawable.ic_close_black_36dp,
+                context.getString(R.string.notification_action_dismiss),
                 ignoreReminderPendingIntent);
+    }
+
+    /**
+     * @param context The context from which this method was called
+     * @return The action associated with dismissing a notification
+     */
+    private static NotificationCompat.Action checkBelongingsAction(Context context) {
+        Intent checkBelongingsIntent = new Intent(context, UsageReminderIntentService.class);
+        checkBelongingsIntent.setAction(ReminderTasks.ACTION_CHECK_BELONGINGS);
+        PendingIntent checkBelongingsPendingIntent = PendingIntent.getService(
+                context,
+                ACTION_CHECK_BELONGINGS_INTENT_ID,
+                checkBelongingsIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        return new NotificationCompat.Action(
+                R.drawable.ic_remove_red_eye_black_36dp,
+                context.getString(R.string.notification_action_check_belongings),
+                checkBelongingsPendingIntent);
     }
 
     /**
@@ -193,7 +219,6 @@ public class NotificationUtils {
                 COLUMN_LAST_USED_DATE + " DESC";
 
         BelongingsDbHelper belongingsDbHelper = new BelongingsDbHelper(context);
-        SQLiteDatabase database = belongingsDbHelper.getReadableDatabase();
 
         return context.getContentResolver().query(
                 BelongingsContract.BelongingEntry.CONTENT_URI,

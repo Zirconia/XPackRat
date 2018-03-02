@@ -16,7 +16,8 @@
         app:layout_constraintRight_toRightOf="parent"
         tools:text="Awesome Basketball"
         android:textSize="36sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textColor="@color/action_bar_title_color" />
 
     <!-- Displays the image for the belonging as a header -->
     <ImageView
@@ -64,6 +65,7 @@
         android:layout_height="wrap_content"
         android:text="@string/no_logs_available"
         android:textSize="36sp"
+        android:textColor="@color/action_bar_title_color"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
